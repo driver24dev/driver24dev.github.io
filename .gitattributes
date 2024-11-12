@@ -1,0 +1,52 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Source code
+*.css text diff=css
+*.htm text diff=html
+*.html text diff=html
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.json text
+*.yml text
+*.yaml text
+
+# Documentation
+*.md text diff=markdown
+*.txt text
+LICENSE text
+
+# Graphics
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# Font files
+*.ttf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+
+# Configs
+.gitattributes text
+.gitignore text
+.prettierrc text
+*.toml text
+*.lock text
+package-lock.json text -diff
+
+# Scripts
+*.sh text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# RC files
+.*rc text
+
+# Ignore files (like .npmignore or .gitignore)
+.*ignore text

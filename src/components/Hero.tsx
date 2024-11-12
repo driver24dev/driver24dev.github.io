@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { images } from '../config/images';
 
 interface HeroProps {
   onBookNow: () => void;
@@ -9,7 +10,6 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-black to-gray-900 animate-gradient-x">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)] animate-pulse"></div>
@@ -17,7 +17,6 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
         </div>
       </div>
 
-      {/* Main background image with parallax effect */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-black opacity-60 z-10"></div>
         <motion.img
@@ -34,13 +33,12 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             },
             opacity: { duration: 1 }
           }}
-          src="https://images.unsplash.com/photo-1631486360964-3a4e6b7e3be6?auto=format&fit=crop&q=80"
+          src={images.heroBg}
           alt="Luxury car"
           className="w-full h-full object-cover"
         />
       </div>
 
-      {/* Floating particles effect */}
       <div className="absolute inset-0 z-10">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -64,7 +62,6 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
         ))}
       </div>
 
-      {/* Content */}
       <div className="relative z-20 container mx-auto px-4 h-screen flex items-center">
         <div className="max-w-3xl">
           <motion.h1
@@ -128,7 +125,6 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

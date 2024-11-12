@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { images } from '../config/images';
 
 const Fleet: React.FC = () => {
   const { ref, inView } = useInView({
@@ -11,19 +12,19 @@ const Fleet: React.FC = () => {
   const vehicles = [
     {
       name: 'Mercedes-Benz S-Class',
-      image: 'https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?auto=format&fit=crop&q=80',
+      image: images.fleet.mercedes,
       description: 'Ultimate luxury sedan for executive travel',
       capacity: '3 passengers',
     },
     {
       name: 'Cadillac Escalade',
-      image: 'https://images.unsplash.com/photo-1632245889029-e406faaa34cd?auto=format&fit=crop&q=80',
+      image: images.fleet.escalade,
       description: 'Spacious SUV perfect for groups or luggage',
       capacity: '6 passengers',
     },
     {
       name: 'Mercedes-Benz Sprinter',
-      image: 'https://images.unsplash.com/photo-1609520505218-7421df70c8a1?auto=format&fit=crop&q=80',
+      image: images.fleet.sprinter,
       description: 'Luxury van for group transportation',
       capacity: '12 passengers',
     },

@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -b main"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "framer-motion": "^11.0.8",
@@ -34,5 +34,5 @@
     "typescript": "^5.2.2",
     "vite": "^5.1.5"
   },
-  "homepage": "https://driver24dev.github.io"
+  "homepage": "https://driver24dev.github.io/la-elite-chauffeur"
 }

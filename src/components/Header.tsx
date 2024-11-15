@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Car, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import Logo from './ui/Logo';
 
 interface HeaderProps {
   onBookNow: () => void;
@@ -17,14 +18,19 @@ const Header: React.FC<HeaderProps> = ({ onBookNow }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToTop = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black shadow-lg' : 'bg-transparent'}`}>
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Car className="h-6 w-6 text-white" />
-            <span className="text-xl font-bold text-white">LA Elite Chauffeur</span>
-          </div>
+          <Logo onClick={scrollToTop} />
 
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#services" className="text-white hover:text-gray-300 transition">Services</a>

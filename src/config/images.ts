@@ -1,4 +1,7 @@
 export const images = {
+  // Logo
+  logo: undefined as string | undefined,
+
   // Hero section background
   heroBg: '/images/hero-luxury-car.jpg',
   

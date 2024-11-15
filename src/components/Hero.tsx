@@ -2,6 +2,8 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { images } from '../config/images';
+import { Button } from './ui/button';
+import { Spotlight } from './ui/spotlight';
 
 interface HeroProps {
   onBookNow: () => void;
@@ -10,6 +12,11 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
   return (
     <div className="relative min-h-screen overflow-hidden">
+      <Spotlight
+        className="-top-40 left-0"
+        fill="white"
+      />
+      
       <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-black to-gray-900 animate-gradient-x">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)] animate-pulse"></div>
@@ -63,41 +70,22 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <Button
+              size="lg"
+              className="bg-white text-black hover:bg-gray-200 transition group relative overflow-hidden"
               onClick={onBookNow}
-              className="bg-white text-black px-8 py-4 rounded-full font-semibold hover:bg-gray-200 transition flex items-center justify-center group relative overflow-hidden"
             >
-              <span className="relative z-10">Book Your Ride</span>
-              <motion.span
-                initial={{ x: 0 }}
-                whileHover={{ x: 5 }}
-                className="relative z-10 ml-2"
-              >
-                <ArrowRight className="h-5 w-5" />
-              </motion.span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-white via-gray-200 to-white"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 1 }}
-              />
-            </motion.button>
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href="#fleet"
-              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-black transition text-center relative overflow-hidden group"
+              Book Your Ride
+              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-2 border-white text-white hover:bg-white hover:text-black transition"
+              asChild
             >
-              <span className="relative z-10">View Our Fleet</span>
-              <motion.div
-                className="absolute inset-0 bg-white"
-                initial={{ scale: 0 }}
-                whileHover={{ scale: 1 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.a>
+              <a href="#fleet">View Our Fleet</a>
+            </Button>
           </motion.div>
         </div>
       </div>

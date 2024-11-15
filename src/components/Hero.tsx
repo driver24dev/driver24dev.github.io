@@ -18,7 +18,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
       </div>
 
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-black opacity-60 z-10"></div>
+        <div className="absolute inset-0 bg-black opacity-60"></div>
         <motion.img
           initial={{ scale: 1.1 }}
           animate={{ 
@@ -37,29 +37,6 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
           alt="Luxury car"
           className="w-full h-full object-cover"
         />
-      </div>
-
-      <div className="absolute inset-0 z-10">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            initial={{
-              x: Math.random() * 100 + "%",
-              y: Math.random() * 100 + "%",
-              opacity: Math.random() * 0.5 + 0.2
-            }}
-            animate={{
-              y: [null, "-100%"],
-              opacity: [null, 0]
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
       </div>
 
       <div className="relative z-20 container mx-auto px-4 h-screen flex items-center">

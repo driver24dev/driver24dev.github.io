@@ -3,7 +3,6 @@ import { Shield, Clock, Award, Headphones, CreditCard, MapPin } from 'lucide-rea
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from '@/hooks/useTranslation';
-import FeatureCard from './ui/FeatureCard';
 
 const Features: React.FC = () => {
   const { t } = useTranslation();
@@ -22,34 +21,45 @@ const Features: React.FC = () => {
     },
   };
 
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   const features = [
     {
-      icon: Shield,
+      icon: <Shield className="h-8 w-8" />,
       title: 'safetyFirst',
       description: 'safetyDesc',
     },
     {
-      icon: Clock,
+      icon: <Clock className="h-8 w-8" />,
       title: '24_7Service',
       description: 'serviceDesc',
     },
     {
-      icon: Award,
+      icon: <Award className="h-8 w-8" />,
       title: 'premiumFleet',
       description: 'fleetDesc',
     },
     {
-      icon: Headphones,
+      icon: <Headphones className="h-8 w-8" />,
       title: 'support',
       description: 'supportDesc',
     },
     {
-      icon: CreditCard,
+      icon: <CreditCard className="h-8 w-8" />,
       title: 'easyBooking',
       description: 'bookingDesc',
     },
     {
-      icon: MapPin,
+      icon: <MapPin className="h-8 w-8" />,
       title: 'localExpertise',
       description: 'expertiseDesc',
     },
@@ -76,12 +86,19 @@ const Features: React.FC = () => {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {features.map((feature, index) => (
-            <FeatureCard
+            <motion.div
               key={index}
-              icon={feature.icon}
-              title={t(feature.title)}
-              description={t(feature.description)}
-            />
+              variants={itemVariants}
+              className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="inline-block p-3 bg-black text-white rounded-lg mb-4">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-semibold mb-3">{t(feature.title)}</h3>
+              <p className="text-gray-600">{t(feature.description)}</p>
+            </motion.div>
           ))}
         </motion.div>
       </div>

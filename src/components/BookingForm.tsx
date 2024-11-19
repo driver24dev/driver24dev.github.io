@@ -16,6 +16,16 @@ interface Location {
   lng: number;
 }
 
+type VehicleType = 'sedan' | 'suv' | 'van' | 'stretch';
+
+interface VehicleMultipliers {
+  [key: string]: number;
+  sedan: number;
+  suv: number;
+  van: number;
+  stretch: number;
+}
+
 // Custom marker icons
 const pickupIcon = new L.DivIcon({
   className: 'custom-marker',
@@ -68,7 +78,9 @@ const MapUpdater: React.FC<{
         fitSelectedRoutes: false,
         showAlternatives: false,
         lineOptions: {
-          styles: [{ color: '#3B82F6', weight: 4, opacity: 0.7 }]
+          styles: [{ color: '#3B82F6', weight: 4, opacity: 0.7 }],
+          extendToWaypoints: true,
+          missingRouteTolerance: 0
         }
       }).addTo(map);
 
@@ -99,7 +111,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     date: '',
     time: '',
     passengers: '1',
-    vehicleType: 'sedan',
+    vehicleType: 'sedan' as VehicleType,
     name: '',
     email: '',
     phone: ''
@@ -113,6 +125,13 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [activeInput, setActiveInput] = useState<'pickup' | 'dropoff' | null>(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
+
+  const vehicleMultipliers: VehicleMultipliers = {
+    sedan: 1,
+    suv: 1.3,
+    van: 1.5,
+    stretch: 2
+  };
 
   const searchLocation = async (query: string) => {
     if (!query) {
@@ -149,17 +168,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       // Base price calculation
       let basePrice = 75; // Base fare
       const pricePerKm = 2.5;
-      const vehicleMultiplier = {
-        sedan: 1,
-        suv: 1.3,
-        van: 1.5,
-        stretch: 2
-      }[formData.vehicleType];
+      const multiplier = vehicleMultipliers[formData.vehicleType];
 
-      const price = (basePrice + (distance * pricePerKm)) * vehicleMultiplier;
+      const price = (basePrice + (distance * pricePerKm)) * multiplier;
       setEstimatedPrice(Math.round(price));
     }
-  }, [selectedLocations, formData.vehicleType]);
+  }, [selectedLocations, formData.vehicleType, vehicleMultipliers]);
 
   useEffect(() => {
     calculatePrice();
@@ -372,7 +386,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                       <select
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         value={formData.vehicleType}
-                        onChange={(e) => setFormData({...formData, vehicleType: e.target.value})}
+                        onChange={(e) => setFormData({...formData, vehicleType: e.target.value as VehicleType})}
                       >
                         <option value="sedan">Luxury Sedan</option>
                         <option value="suv">Executive SUV</option>

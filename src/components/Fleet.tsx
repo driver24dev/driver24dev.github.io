@@ -95,7 +95,7 @@ const Fleet: React.FC = () => {
                 <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
                 <p className="text-gray-600 mb-4">{t(vehicle.description)}</p>
                 <p className="text-sm text-gray-500">
-                  {t('capacity')}: {vehicle.capacity} {t('passengers')}
+                  {t('fleetCapacity')}: {vehicle.capacity} {t('passengers')}
                 </p>
               </motion.div>
             </motion.div>

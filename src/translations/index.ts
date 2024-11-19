@@ -43,6 +43,7 @@ export const translations = {
     'vanDesc': 'Luxury van for group transportation',
     'capacity': 'Capacity',
     'passengers': 'passengers',
+    'fleetCapacity': 'Passenger Capacity',
 
     // Services Section
     'ourServices': 'Our Services',
@@ -133,6 +134,7 @@ export const translations = {
     'vanDesc': 'Van de lujo para transporte grupal',
     'capacity': 'Capacidad',
     'passengers': 'pasajeros',
+    'fleetCapacity': 'Capacidad de Pasajeros',
 
     // Services Section
     'ourServices': 'Nuestros Servicios',

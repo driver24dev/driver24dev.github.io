@@ -1,9 +1,15 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { images } from '../config/images';
 import { useTranslation } from '@/hooks/useTranslation';
-import { images } from '@/config/images';
 
 const Fleet: React.FC = () => {
   const { t } = useTranslation();
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   const vehicles = [
     {
@@ -26,32 +32,75 @@ const Fleet: React.FC = () => {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+      },
+    },
+  };
+
   return (
-    <section id="fleet" className="py-20 bg-white">
+    <section id="fleet" className="py-20" ref={ref}>
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Our Luxury Fleet</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose from our selection of premium vehicles
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
+          className="text-4xl font-bold text-center mb-12"
+        >
+          {t('ourLuxuryFleet')}
+        </motion.h2>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="grid md:grid-cols-3 gap-8"
+        >
           {vehicles.map((vehicle, index) => (
-            <div key={index} className="group">
-              <div className="relative overflow-hidden rounded-lg mb-4">
-                <img
-                  src={vehicle.image}
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              className="bg-white rounded-lg overflow-hidden shadow-lg group"
+              whileHover={{ y: -10 }}
+            >
+              <div className="h-64 overflow-hidden">
+                <motion.img 
+                  src={vehicle.image} 
                   alt={t(vehicle.name)}
-                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-opacity" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
-              <p className="text-gray-600 mb-2">{t(vehicle.description)}</p>
-              <p className="text-sm text-gray-500">Up to {vehicle.capacity} passengers</p>
-            </div>
+              <motion.div 
+                className="p-6"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
+                <p className="text-gray-600 mb-4">{t(vehicle.description)}</p>
+                <p className="text-sm text-gray-500">
+                  {t('capacity')}: {vehicle.capacity} {t('passengers')}
+                </p>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

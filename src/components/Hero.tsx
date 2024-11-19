@@ -57,7 +57,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-5xl md:text-6xl font-bold mb-6 leading-tight text-white"
           >
-            {t('Experience Luxury Transportation in Los Angeles')}
+            {t('heroTitle')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -65,7 +65,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-xl md:text-2xl mb-8 text-gray-300"
           >
-            {t('Professional chauffeurs, premium vehicles, and exceptional service for your transportation needs.')}
+            {t('heroSubtitle')}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +78,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
               className="bg-white text-black hover:bg-gray-200 transition group relative overflow-hidden"
               onClick={onBookNow}
             >
-              {t('Book Your Ride')}
+              {t('bookNow')}
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
             <Button
@@ -87,7 +87,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
               className="border-2 border-white text-white hover:bg-white hover:text-black transition"
               asChild
             >
-              <a href="#fleet">{t('View Our Fleet')}</a>
+              <a href="#fleet">{t('viewFleet')}</a>
             </Button>
           </motion.div>
         </div>

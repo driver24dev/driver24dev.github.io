@@ -68,9 +68,7 @@ const MapUpdater: React.FC<{
         fitSelectedRoutes: false,
         showAlternatives: false,
         lineOptions: {
-          styles: [{ color: '#3B82F6', weight: 4, opacity: 0.7 }],
-          extendToWaypoints: true,
-          missingRouteTolerance: 0
+          styles: [{ color: '#3B82F6', weight: 4, opacity: 0.7 }]
         }
       }).addTo(map);
 
@@ -151,14 +149,13 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       // Base price calculation
       let basePrice = 75; // Base fare
       const pricePerKm = 2.5;
-      const vehicleMultipliers: Record<string, number> = {
+      const vehicleMultiplier = {
         sedan: 1,
         suv: 1.3,
         van: 1.5,
         stretch: 2
-      };
+      }[formData.vehicleType];
 
-      const vehicleMultiplier = vehicleMultipliers[formData.vehicleType] || 1;
       const price = (basePrice + (distance * pricePerKm)) * vehicleMultiplier;
       setEstimatedPrice(Math.round(price));
     }

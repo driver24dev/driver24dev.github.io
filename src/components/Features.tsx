@@ -2,8 +2,10 @@ import React from 'react';
 import { Shield, Clock, Award, Headphones, CreditCard, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Features: React.FC = () => {
+  const { t } = useTranslation();
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -33,33 +35,33 @@ const Features: React.FC = () => {
   const features = [
     {
       icon: <Shield className="h-8 w-8" />,
-      title: 'Safety First',
-      description: 'Fully licensed, insured, and background-checked chauffeurs for your peace of mind.',
+      title: 'safetyFirst',
+      description: 'safetyDesc',
     },
     {
       icon: <Clock className="h-8 w-8" />,
-      title: '24/7 Service',
-      description: 'Available round-the-clock for all your transportation needs.',
+      title: '24_7Service',
+      description: 'serviceDesc',
     },
     {
       icon: <Award className="h-8 w-8" />,
-      title: 'Premium Fleet',
-      description: 'Luxury vehicles maintained to the highest standards of comfort and reliability.',
+      title: 'premiumFleet',
+      description: 'fleetDesc',
     },
     {
       icon: <Headphones className="h-8 w-8" />,
-      title: 'Dedicated Support',
-      description: 'Professional customer service team ready to assist you anytime.',
+      title: 'support',
+      description: 'supportDesc',
     },
     {
       icon: <CreditCard className="h-8 w-8" />,
-      title: 'Easy Booking',
-      description: 'Simple online booking system with secure payment options.',
+      title: 'easyBooking',
+      description: 'bookingDesc',
     },
     {
       icon: <MapPin className="h-8 w-8" />,
-      title: 'Local Expertise',
-      description: 'Knowledgeable chauffeurs familiar with Los Angeles and surrounding areas.',
+      title: 'localExpertise',
+      description: 'expertiseDesc',
     },
   ];
 
@@ -72,9 +74,9 @@ const Features: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4">Why Choose Us</h2>
+          <h2 className="text-4xl font-bold mb-4">{t('whyChooseUs')}</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Experience the difference with our premium chauffeur service
+            {t('experienceDifference')}
           </p>
         </motion.div>
         <motion.div
@@ -94,8 +96,8 @@ const Features: React.FC = () => {
               <div className="inline-block p-3 bg-black text-white rounded-lg mb-4">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <h3 className="text-xl font-semibold mb-3">{t(feature.title)}</h3>
+              <p className="text-gray-600">{t(feature.description)}</p>
             </motion.div>
           ))}
         </motion.div>

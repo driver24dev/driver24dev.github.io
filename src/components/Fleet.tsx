@@ -2,8 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { images } from '../config/images';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Fleet: React.FC = () => {
+  const { t } = useTranslation();
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -11,22 +13,22 @@ const Fleet: React.FC = () => {
 
   const vehicles = [
     {
-      name: 'Mercedes-Benz S-Class',
+      name: 'sedanTitle',
       image: images.fleet.mercedes,
-      description: 'Ultimate luxury sedan for executive travel',
-      capacity: '3 passengers',
+      description: 'sedanDesc',
+      capacity: '3',
     },
     {
-      name: 'Cadillac Escalade',
+      name: 'suvTitle',
       image: images.fleet.escalade,
-      description: 'Spacious SUV perfect for groups or luggage',
-      capacity: '6 passengers',
+      description: 'suvDesc',
+      capacity: '6',
     },
     {
-      name: 'Mercedes-Benz Sprinter',
+      name: 'vanTitle',
       image: images.fleet.sprinter,
-      description: 'Luxury van for group transportation',
-      capacity: '12 passengers',
+      description: 'vanDesc',
+      capacity: '12',
     },
   ];
 
@@ -60,7 +62,7 @@ const Fleet: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-4xl font-bold text-center mb-12"
         >
-          Our Luxury Fleet
+          {t('ourLuxuryFleet')}
         </motion.h2>
         <motion.div
           variants={containerVariants}
@@ -78,7 +80,7 @@ const Fleet: React.FC = () => {
               <div className="h-64 overflow-hidden">
                 <motion.img 
                   src={vehicle.image} 
-                  alt={vehicle.name}
+                  alt={t(vehicle.name)}
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.6 }}
@@ -90,9 +92,11 @@ const Fleet: React.FC = () => {
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h3 className="text-xl font-semibold mb-2">{vehicle.name}</h3>
-                <p className="text-gray-600 mb-4">{vehicle.description}</p>
-                <p className="text-sm text-gray-500">Capacity: {vehicle.capacity}</p>
+                <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
+                <p className="text-gray-600 mb-4">{t(vehicle.description)}</p>
+                <p className="text-sm text-gray-500">
+                  {t('capacity')}: {vehicle.capacity} {t('passengers')}
+                </p>
               </motion.div>
             </motion.div>
           ))}

@@ -31,12 +31,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff') => {
     // In a real app, you would use a geocoding service here
     // For demo purposes, we'll use dummy coordinates
-    const dummyLocations: Record<string, { lat: number; lng: number }> = {
-      'LAX': { lat: 33.9416, lng: -118.4085 },
-      'Beverly Hills': { lat: 34.0736, lng: -118.4004 },
-      'Santa Monica': { lat: 34.0195, lng: -118.4912 },
-      'Hollywood': { lat: 34.0928, lng: -118.3287 },
-      'Downtown LA': { lat: 34.0407, lng: -118.2468 }
+    const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {
+      'LAX': { name: 'Los Angeles International Airport', lat: 33.9416, lng: -118.4085 },
+      'Beverly Hills': { name: 'Beverly Hills', lat: 34.0736, lng: -118.4004 },
+      'Santa Monica': { name: 'Santa Monica', lat: 34.0195, lng: -118.4912 },
+      'Hollywood': { name: 'Hollywood', lat: 34.0928, lng: -118.3287 },
+      'Downtown LA': { name: 'Downtown Los Angeles', lat: 34.0407, lng: -118.2468 }
     };
 
     const location = Object.entries(dummyLocations).find(([key]) => 
@@ -44,10 +44,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     );
 
     if (location) {
-      const [name, coords] = location;
+      const [_, locationData] = location;
       const newLocation: Location = {
-        ...coords,
-        address: value
+        lat: locationData.lat,
+        lng: locationData.lng,
+        address: locationData.name
       };
       
       if (type === 'pickup') {
@@ -120,6 +121,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                   onChange={(e) => handleLocationInput(e.target.value, 'pickup')}
                   required
                 />
+                {pickup && (
+                  <p className="mt-1 text-sm text-gray-500">{pickup.address}</p>
+                )}
               </div>
 
               <div>
@@ -133,6 +137,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                   onChange={(e) => handleLocationInput(e.target.value, 'dropoff')}
                   required
                 />
+                {dropoff && (
+                  <p className="mt-1 text-sm text-gray-500">{dropoff.address}</p>
+                )}
               </div>
 
               <div>

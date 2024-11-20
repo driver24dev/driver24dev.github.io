@@ -31,10 +31,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff') => {
     // In a real app, you would use a geocoding service here
     // For demo purposes, we'll use dummy coordinates
-    const dummyLocations = {
+    const dummyLocations: Record<string, { lat: number; lng: number }> = {
       'LAX': { lat: 33.9416, lng: -118.4085 },
       'Beverly Hills': { lat: 34.0736, lng: -118.4004 },
-      'Santa Monica': { lat: 34.0195, lng: -118.4912 }
+      'Santa Monica': { lat: 34.0195, lng: -118.4912 },
+      'Hollywood': { lat: 34.0928, lng: -118.3287 },
+      'Downtown LA': { lat: 34.0407, lng: -118.2468 }
     };
 
     const location = Object.entries(dummyLocations).find(([key]) => 
@@ -67,9 +69,22 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       setLoading(true);
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const bookingData = {
+        pickup,
+        dropoff,
+        date,
+        time,
+        passengers,
+        vehicleType,
+        customerInfo: formData
+      };
+
+      console.log('Booking submitted:', bookingData);
       toast.success('Booking submitted successfully!');
       onClose();
     } catch (error) {
+      console.error('Booking error:', error);
       toast.error('Failed to submit booking');
     } finally {
       setLoading(false);
@@ -100,7 +115,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter pickup address"
+                  placeholder="Enter pickup address (try LAX, Beverly Hills, etc.)"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   onChange={(e) => handleLocationInput(e.target.value, 'pickup')}
                   required
@@ -113,7 +128,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter dropoff address"
+                  placeholder="Enter dropoff address (try Santa Monica, Hollywood, etc.)"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   onChange={(e) => handleLocationInput(e.target.value, 'dropoff')}
                   required

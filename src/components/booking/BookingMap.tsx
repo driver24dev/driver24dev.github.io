@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -17,20 +17,12 @@ interface BookingMapProps {
 }
 
 const MapUpdater: React.FC<{ 
-  center: [number, number], 
-  bounds?: L.LatLngBounds,
   pickup?: Location,
   dropoff?: Location 
-}> = ({ center, bounds, pickup, dropoff }) => {
+}> = ({ pickup, dropoff }) => {
   const map = useMap();
 
-  React.useEffect(() => {
-    if (bounds) {
-      map.fitBounds(bounds);
-    } else {
-      map.setView(center, map.getZoom());
-    }
-
+  useEffect(() => {
     // Remove existing routing controls
     map.eachLayer((layer) => {
       if (layer instanceof L.Routing.Control) {
@@ -61,6 +53,20 @@ const MapUpdater: React.FC<{
       if (container) {
         container.style.display = 'none';
       }
+
+      // Fit bounds to include both markers
+      const bounds = L.latLngBounds([
+        [pickup.lat, pickup.lng],
+        [dropoff.lat, dropoff.lng]
+      ]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    } else if (pickup) {
+      map.setView([pickup.lat, pickup.lng], 13);
+    } else if (dropoff) {
+      map.setView([dropoff.lat, dropoff.lng], 13);
+    } else {
+      // Default view of Los Angeles
+      map.setView([34.0522, -118.2437], 11);
     }
 
     return () => {
@@ -70,7 +76,7 @@ const MapUpdater: React.FC<{
         }
       });
     };
-  }, [map, center, bounds, pickup, dropoff]);
+  }, [map, pickup, dropoff]);
 
   return null;
 };
@@ -90,7 +96,6 @@ const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <MapUpdater
-          center={defaultCenter}
           pickup={pickup}
           dropoff={dropoff}
         />

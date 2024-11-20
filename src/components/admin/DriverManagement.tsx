@@ -36,7 +36,7 @@ const DriverManagement: React.FC = () => {
     vehicleType: 'sedan',
     licensePlate: ''
   });
-  const { token } = useAuth();
+  const { isAdmin } = useAuth();
 
   const [drivers, setDrivers] = useState<Driver[]>([
     {
@@ -137,6 +137,10 @@ const DriverManagement: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (!isAdmin()) {
+    return null;
+  }
 
   if (loading) {
     return (

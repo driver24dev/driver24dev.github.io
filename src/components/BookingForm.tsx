@@ -20,9 +20,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [time, setTime] = useState('');
   const [passengers, setPassengers] = useState(1);
   const [vehicleType, setVehicleType] = useState('sedan');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
   const [loading, setLoading] = useState(false);
 
   // Simulated geocoding function
@@ -186,8 +188,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                   <input
                     type="text"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                 </div>
@@ -198,8 +200,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                   <input
                     type="email"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                   />
                 </div>
@@ -210,8 +212,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                   <input
                     type="tel"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     required
                   />
                 </div>

@@ -20,7 +20,7 @@ interface Booking {
 
 const BookingsList: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [bookings] = useState<Booking[]>([
+  const [bookings, setBookings] = useState<Booking[]>([
     {
       id: 'B1',
       customerName: 'Alice Brown',
@@ -67,6 +67,27 @@ const BookingsList: React.FC = () => {
     }
   };
 
+  const handleStatusChange = async (bookingId: string, newStatus: string) => {
+    try {
+      setLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setBookings(prevBookings => 
+        prevBookings.map(booking => 
+          booking.id === bookingId 
+            ? { ...booking, status: newStatus as any } 
+            : booking
+        )
+      );
+      
+      toast.success(`Booking status updated to ${newStatus}`);
+    } catch (error) {
+      toast.error('Failed to update booking status');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -82,25 +103,6 @@ const BookingsList: React.FC = () => {
       minute: '2-digit',
       hour12: true
     });
-  };
-
-  const handleStatusChange = async (bookingId: string, newStatus: string) => {
-    try {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setBookings(bookings.map(booking => 
-        booking.id === bookingId 
-          ? { ...booking, status: newStatus as any } 
-          : booking
-      ));
-      
-      toast.success(`Booking status updated to ${newStatus}`);
-    } catch (error) {
-      toast.error('Failed to update booking status');
-    } finally {
-      setLoading(false);
-    }
   };
 
   if (loading) {

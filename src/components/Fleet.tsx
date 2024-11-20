@@ -13,21 +13,21 @@ const Fleet: React.FC = () => {
 
   const vehicles = [
     {
-      name: 'sedanTitle',
+      name: t('sedanTitle'),
       image: images.fleet.mercedes,
-      description: 'sedanDesc',
+      description: t('sedanDesc'),
       capacity: '3',
     },
     {
-      name: 'suvTitle',
+      name: t('suvTitle'),
       image: images.fleet.escalade,
-      description: 'suvDesc',
+      description: t('suvDesc'),
       capacity: '6',
     },
     {
-      name: 'vanTitle',
+      name: t('vanTitle'),
       image: images.fleet.sprinter,
-      description: 'vanDesc',
+      description: t('vanDesc'),
       capacity: '12',
     },
   ];
@@ -80,7 +80,7 @@ const Fleet: React.FC = () => {
               <div className="h-64 overflow-hidden">
                 <motion.img 
                   src={vehicle.image} 
-                  alt={t(vehicle.name)}
+                  alt={vehicle.name}
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.6 }}
@@ -92,8 +92,8 @@ const Fleet: React.FC = () => {
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
-                <p className="text-gray-600 mb-4">{t(vehicle.description)}</p>
+                <h3 className="text-xl font-semibold mb-2">{vehicle.name}</h3>
+                <p className="text-gray-600 mb-4">{vehicle.description}</p>
                 <p className="text-sm text-gray-500">
                   {t('fleetCapacity')}: {vehicle.capacity} {t('passengers')}
                 </p>

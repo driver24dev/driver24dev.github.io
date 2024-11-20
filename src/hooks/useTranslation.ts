@@ -9,5 +9,5 @@ export function useTranslation() {
     return translations[language][key] || key;
   };
 
-  return { t }
+  return { t };
 }

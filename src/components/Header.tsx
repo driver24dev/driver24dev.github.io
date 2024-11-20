@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { language, toggleLanguage } = useLanguage();
+  const { toggleLanguage } = useLanguage();
   const { t } = useTranslation();
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
 
@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
     menuItems.push({
       href: "#admin",
       icon: <Shield className="h-5 w-5" />,
-      label: 'menu' // Using an existing key as placeholder
+      label: 'menu'
     });
   }
 

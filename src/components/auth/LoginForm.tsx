@@ -15,7 +15,7 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setIsLoading(true);
     
     try {
-      // Admin credentials
+      // Admin login
       if (formData.email === 'admin@laelitechauffeur.com' && formData.password === 'admin123') {
         await login({
           email: formData.email,
@@ -24,13 +24,12 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         });
         toast.success('Welcome, Admin!');
         onClose();
-        const adminSection = document.getElementById('admin');
-        if (adminSection) {
-          adminSection.scrollIntoView({ behavior: 'smooth' });
-        }
+        window.location.reload(); // Force reload to update UI
+        return;
       } 
-      // Driver credentials
-      else if (formData.email === 'john.smith@laelitechauffeur.com' && formData.password === 'driver123') {
+      
+      // Driver login
+      if (formData.email === 'john.smith@laelitechauffeur.com' && formData.password === 'driver123') {
         await login({
           email: formData.email,
           password: formData.password,
@@ -38,23 +37,23 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         });
         toast.success('Welcome, John Smith!');
         onClose();
-        const driverSection = document.getElementById('driver-portal');
-        if (driverSection) {
-          driverSection.scrollIntoView({ behavior: 'smooth' });
-        }
+        window.location.reload(); // Force reload to update UI
+        return;
       }
-      // Client credentials
-      else if (formData.email === 'client@laelitechauffeur.com' && formData.password === 'client123') {
+      
+      // Client login
+      if (formData.email === 'client@laelitechauffeur.com' && formData.password === 'client123') {
         await login({
           email: formData.email,
           password: formData.password
         });
-        toast.success('Welcome, James Wilson!');
+        toast.success('Welcome back!');
         onClose();
+        window.location.reload(); // Force reload to update UI
+        return;
       }
-      else {
-        throw new Error('Invalid credentials');
-      }
+
+      throw new Error('Invalid credentials');
     } catch (error) {
       console.error('Login error:', error);
       toast.error('Invalid email or password');
@@ -98,10 +97,12 @@ const LoginForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       >
         {isLoading ? 'Logging in...' : 'Log In'}
       </button>
+      
       <div className="text-xs text-gray-500 mt-2 space-y-1">
-        <div>Admin demo: admin@laelitechauffeur.com / admin123</div>
-        <div>Driver demo: john.smith@laelitechauffeur.com / driver123</div>
-        <div>Client demo: client@laelitechauffeur.com / client123</div>
+        <p>Demo Credentials:</p>
+        <div>Admin: admin@laelitechauffeur.com / admin123</div>
+        <div>Driver: john.smith@laelitechauffeur.com / driver123</div>
+        <div>Client: client@laelitechauffeur.com / client123</div>
       </div>
     </form>
   );

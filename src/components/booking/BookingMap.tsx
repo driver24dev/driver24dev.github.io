@@ -31,12 +31,14 @@ const MapUpdater: React.FC<{
       map.setView(center, map.getZoom());
     }
 
+    // Remove existing routing controls
     map.eachLayer((layer) => {
       if (layer instanceof L.Routing.Control) {
         map.removeControl(layer);
       }
     });
 
+    // Add routing if both pickup and dropoff are set
     if (pickup && dropoff) {
       const routingControl = L.Routing.control({
         waypoints: [
@@ -45,13 +47,16 @@ const MapUpdater: React.FC<{
         ],
         routeWhileDragging: false,
         addWaypoints: false,
-        fitSelectedRoutes: false,
+        fitSelectedRoutes: true,
         showAlternatives: false,
         lineOptions: {
-          styles: [{ color: '#3B82F6', weight: 4, opacity: 0.7 }]
+          styles: [{ color: '#3B82F6', weight: 4, opacity: 0.7 }],
+          extendToWaypoints: true,
+          missingRouteTolerance: 0
         }
       }).addTo(map);
 
+      // Hide the routing control container
       const container = routingControl.getContainer();
       if (container) {
         container.style.display = 'none';

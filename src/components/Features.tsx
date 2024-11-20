@@ -3,6 +3,7 @@ import { Shield, Clock, Award, Headphones, CreditCard, MapPin } from 'lucide-rea
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useTranslation } from '@/hooks/useTranslation';
+import { TranslationKey } from '@/translations/types';
 
 const Features: React.FC = () => {
   const { t } = useTranslation();
@@ -32,7 +33,11 @@ const Features: React.FC = () => {
     },
   };
 
-  const features = [
+  const features: Array<{
+    icon: JSX.Element;
+    title: TranslationKey;
+    description: TranslationKey;
+  }> = [
     {
       icon: <Shield className="h-8 w-8" />,
       title: 'safetyFirst',

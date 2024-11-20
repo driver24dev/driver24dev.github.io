@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { images } from '../config/images';
 import { useTranslation } from '@/hooks/useTranslation';
+import { TranslationKey } from '@/translations/types';
 
 const Fleet: React.FC = () => {
   const { t } = useTranslation();
@@ -11,23 +12,28 @@ const Fleet: React.FC = () => {
     threshold: 0.1,
   });
 
-  const vehicles = [
+  const vehicles: Array<{
+    name: TranslationKey;
+    image: string;
+    description: TranslationKey;
+    capacity: string;
+  }> = [
     {
-      name: t('sedanTitle'),
+      name: 'sedanTitle',
       image: images.fleet.mercedes,
-      description: t('sedanDesc'),
+      description: 'sedanDesc',
       capacity: '3',
     },
     {
-      name: t('suvTitle'),
+      name: 'suvTitle',
       image: images.fleet.escalade,
-      description: t('suvDesc'),
+      description: 'suvDesc',
       capacity: '6',
     },
     {
-      name: t('vanTitle'),
+      name: 'vanTitle',
       image: images.fleet.sprinter,
-      description: t('vanDesc'),
+      description: 'vanDesc',
       capacity: '12',
     },
   ];
@@ -80,7 +86,7 @@ const Fleet: React.FC = () => {
               <div className="h-64 overflow-hidden">
                 <motion.img 
                   src={vehicle.image} 
-                  alt={vehicle.name}
+                  alt={t(vehicle.name)}
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.6 }}
@@ -92,8 +98,8 @@ const Fleet: React.FC = () => {
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h3 className="text-xl font-semibold mb-2">{vehicle.name}</h3>
-                <p className="text-gray-600 mb-4">{vehicle.description}</p>
+                <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
+                <p className="text-gray-600 mb-4">{t(vehicle.description)}</p>
                 <p className="text-sm text-gray-500">
                   {t('fleetCapacity')}: {vehicle.capacity} {t('passengers')}
                 </p>

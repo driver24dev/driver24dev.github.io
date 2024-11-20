@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, Calendar, MapPin, Users } from 'lucide-react';
+import { Car, Calendar, MapPin, Users, Clock } from 'lucide-react';
 
 const BookingPlaceholder: React.FC = () => {
   return (

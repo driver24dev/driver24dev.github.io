@@ -6,6 +6,7 @@ import { useLanguage } from './LanguageProvider';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from './auth/AuthModal';
+import { TranslationKey } from '@/translations/types';
 import {
   Sheet,
   SheetContent,
@@ -17,6 +18,12 @@ import {
 interface HeaderProps {
   onBookNow: () => void;
   showBooking: boolean;
+}
+
+interface MenuItem {
+  href: string;
+  icon: JSX.Element;
+  label: TranslationKey;
 }
 
 const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
@@ -43,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
     });
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { href: "#", icon: <Home className="h-5 w-5" />, label: 'home' },
     { href: "#services", icon: <Settings className="h-5 w-5" />, label: 'services' },
     { href: "#fleet", icon: <Car className="h-5 w-5" />, label: 'fleet' },
@@ -56,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
     menuItems.push({
       href: "#admin",
       icon: <Shield className="h-5 w-5" />,
-      label: 'Admin Dashboard'
+      label: 'menu' // Using an existing key as placeholder
     });
   }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Car, MapPin, Calculator } from 'lucide-react';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import BookingMap from './booking/BookingMap';
 

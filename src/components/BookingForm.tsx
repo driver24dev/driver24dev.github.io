@@ -10,6 +10,7 @@ import PassengerDetails from './booking/PassengerDetails';
 import ActionButtons from './booking/ActionButtons';
 import AddStopButton from './booking/AddStopButton';
 import TripDuration from './booking/TripDuration';
+import VehicleSelection from './booking/VehicleSelection';
 
 interface Location {
   lat: number;
@@ -23,9 +24,11 @@ interface BookingFormProps {
 
 type TabType = 'book' | 'quote' | 'receipts' | 'manage';
 type ServiceType = 'transfer' | 'hourly';
+type BookingStep = 'details' | 'vehicle' | 'payment';
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('book');
+  const [bookingStep, setBookingStep] = useState<BookingStep>('details');
   const [isRideNow, setIsRideNow] = useState(false);
   const [serviceType, setServiceType] = useState<ServiceType>('transfer');
   const [pickup, setPickup] = useState<Location>();
@@ -74,40 +77,14 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pickup || !dropoff) {
       toast.error('Please select pickup and dropoff locations');
       return;
     }
 
-    try {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Booking submitted:', {
-        pickup,
-        stops,
-        dropoff,
-        date,
-        time,
-        serviceType,
-        hours,
-        minutes,
-        travelers,
-        kids,
-        bags,
-        isRideNow
-      });
-      
-      toast.success('Booking submitted successfully!');
-      onClose();
-    } catch (error) {
-      console.error('Booking error:', error);
-      toast.error('Failed to submit booking');
-    } finally {
-      setLoading(false);
-    }
+    setBookingStep('vehicle');
   };
 
   const handleGetQuote = () => {
@@ -128,7 +105,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   };
 
   const renderBookingForm = () => (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleDetailsSubmit} className="space-y-6">
       <div className="flex gap-6">
         <div className="flex-1 space-y-6">
           <div className="flex justify-between items-center">
@@ -198,6 +175,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
           <ActionButtons
             onCancel={onClose}
             loading={loading}
+            submitLabel="Continue"
           />
         </div>
 
@@ -388,7 +366,22 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
             </button>
           </div>
 
-          {activeTab === 'book' && renderBookingForm()}
+          {activeTab === 'book' && bookingStep === 'details' && renderBookingForm()}
+          {activeTab === 'book' && bookingStep === 'vehicle' && (
+            <VehicleSelection
+              onBack={() => setBookingStep('details')}
+              onContinue={() => setBookingStep('payment')}
+              bookingDetails={{
+                pickupLocation: pickup?.address || '',
+                dropoffLocation: dropoff?.address || '',
+                date,
+                time,
+                travelers,
+                kids,
+                bags
+              }}
+            />
+          )}
           {activeTab === 'quote' && renderQuoteForm()}
           {activeTab === 'receipts' && renderReceiptsTab()}
           {activeTab === 'manage' && renderManageTab()}

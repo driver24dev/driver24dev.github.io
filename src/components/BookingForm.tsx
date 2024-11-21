@@ -11,6 +11,7 @@ import ActionButtons from './booking/ActionButtons';
 import AddStopButton from './booking/AddStopButton';
 import TripDuration from './booking/TripDuration';
 import VehicleSelection from './booking/VehicleSelection';
+import PaymentForm from './booking/PaymentForm';
 
 interface Location {
   lat: number;
@@ -43,6 +44,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [bags, setBags] = useState(0);
   const [loading, setLoading] = useState(false);
   const [quotePrice, setQuotePrice] = useState<{ min: number; max: number } | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
 
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
     const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {
@@ -85,6 +87,15 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     }
 
     setBookingStep('vehicle');
+  };
+
+  const handleVehicleSelect = (vehicle: { name: string; price: number }) => {
+    setSelectedVehicle(vehicle);
+  };
+
+  const handlePaymentSubmit = () => {
+    toast.success('Booking confirmed!');
+    onClose();
   };
 
   const handleGetQuote = () => {
@@ -371,6 +382,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
             <VehicleSelection
               onBack={() => setBookingStep('details')}
               onContinue={() => setBookingStep('payment')}
+              onVehicleSelect={handleVehicleSelect}
               bookingDetails={{
                 pickupLocation: pickup?.address || '',
                 dropoffLocation: dropoff?.address || '',
@@ -379,6 +391,22 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                 travelers,
                 kids,
                 bags
+              }}
+            />
+          )}
+          {activeTab === 'book' && bookingStep === 'payment' && selectedVehicle && (
+            <PaymentForm
+              onBack={() => setBookingStep('vehicle')}
+              onSubmit={handlePaymentSubmit}
+              bookingDetails={{
+                pickupLocation: pickup?.address || '',
+                dropoffLocation: dropoff?.address || '',
+                date,
+                time,
+                travelers,
+                kids,
+                bags,
+                vehicle: selectedVehicle
               }}
             />
           )}

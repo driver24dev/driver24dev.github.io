@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 interface VehicleSelectionProps {
   onBack: () => void;
   onContinue: () => void;
+  onVehicleSelect: (vehicle: { name: string; price: number }) => void;
   bookingDetails: {
     pickupLocation: string;
     dropoffLocation: string;
@@ -83,6 +84,7 @@ const vehicles: Vehicle[] = [
 const VehicleSelection: React.FC<VehicleSelectionProps> = ({
   onBack,
   onContinue,
+  onVehicleSelect,
   bookingDetails
 }) => {
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
@@ -109,6 +111,17 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
     // This is a simplified calculation - you would want to implement actual distance-based pricing
     const estimatedMiles = 20; // Example: 20 miles trip
     return vehicle.basePrice + (vehicle.pricePerMile * estimatedMiles);
+  };
+
+  const handleVehicleSelect = (vehicleId: string) => {
+    setSelectedVehicle(vehicleId);
+    const vehicle = vehicles.find(v => v.id === vehicleId);
+    if (vehicle) {
+      onVehicleSelect({
+        name: vehicle.name,
+        price: calculateEstimatedPrice(vehicle)
+      });
+    }
   };
 
   const renderTripDetails = () => (
@@ -174,7 +187,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
         className={`bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all ${
           isSelected ? 'ring-2 ring-blue-500' : ''
         }`}
-        onClick={() => setSelectedVehicle(vehicle.id)}
+        onClick={() => handleVehicleSelect(vehicle.id)}
       >
         <div className="aspect-w-16 aspect-h-9">
           <img
@@ -217,7 +230,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
         className={`bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all ${
           isSelected ? 'ring-2 ring-blue-500' : ''
         }`}
-        onClick={() => setSelectedVehicle(vehicle.id)}
+        onClick={() => handleVehicleSelect(vehicle.id)}
       >
         <div className="flex">
           <img

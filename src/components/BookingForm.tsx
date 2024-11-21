@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
+import { Calendar, Calculator, Receipt, Clock, X, Menu } from 'lucide-react';
 import BookingMap from './booking/BookingMap';
 import ServiceTypeToggle from './booking/ServiceTypeToggle';
 import RideToggle from './booking/RideToggle';
@@ -12,6 +12,13 @@ import AddStopButton from './booking/AddStopButton';
 import TripDuration from './booking/TripDuration';
 import VehicleSelection from './booking/VehicleSelection';
 import PaymentForm from './booking/PaymentForm';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface Location {
   lat: number;
@@ -44,6 +51,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [bags, setBags] = useState(0);
   const [quotePrice, setQuotePrice] = useState<{ min: number; max: number } | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
     const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {
@@ -116,7 +124,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
   const renderBookingForm = () => (
     <form onSubmit={handleDetailsSubmit} className="space-y-6">
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 space-y-6">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Where & When</h3>
@@ -188,7 +196,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
           />
         </div>
 
-        <div className="w-[300px]">
+        <div className="hidden lg:block w-[300px]">
           <BookingMap pickup={pickup} dropoff={dropoff} stops={stops} />
         </div>
       </div>
@@ -197,7 +205,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
   const renderQuoteForm = () => (
     <div className="space-y-6">
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 bg-gray-50 p-6 rounded-lg">
           <h3 className="text-lg font-semibold mb-4">Get a Price Quote</h3>
           
@@ -237,7 +245,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
           />
         </div>
 
-        <div className="w-[300px]">
+        <div className="hidden lg:block w-[300px]">
           <BookingMap pickup={pickup} dropoff={dropoff} stops={stops} />
         </div>
       </div>
@@ -316,12 +324,77 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     </div>
   );
 
+  const renderMobileMenu = () => (
+    <Sheet>
+      <SheetTrigger asChild>
+        <button className="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
+          <Menu className="h-6 w-6" />
+        </button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[300px] bg-white">
+        <SheetHeader>
+          <SheetTitle>Menu</SheetTitle>
+        </SheetHeader>
+        <div className="mt-6 space-y-2">
+          <button
+            onClick={() => {
+              setActiveTab('book');
+              setIsMobileMenuOpen(false);
+            }}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+              activeTab === 'book' ? 'bg-black text-white' : 'hover:bg-gray-100'
+            }`}
+          >
+            <Calendar className="h-5 w-5" />
+            <span>Book Now</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('quote');
+              setIsMobileMenuOpen(false);
+            }}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+              activeTab === 'quote' ? 'bg-black text-white' : 'hover:bg-gray-100'
+            }`}
+          >
+            <Calculator className="h-5 w-5" />
+            <span>Price Quote</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('receipts');
+              setIsMobileMenuOpen(false);
+            }}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+              activeTab === 'receipts' ? 'bg-black text-white' : 'hover:bg-gray-100'
+            }`}
+          >
+            <Receipt className="h-5 w-5" />
+            <span>Quick Receipts</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('manage');
+              setIsMobileMenuOpen(false);
+            }}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+              activeTab === 'manage' ? 'bg-black text-white' : 'hover:bg-gray-100'
+            }`}
+          >
+            <Clock className="h-5 w-5" />
+            <span>Manage Reservations</span>
+          </button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
       <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <div className="flex space-x-4">
+            <div className="hidden lg:flex space-x-4">
               <button
                 onClick={() => setActiveTab('book')}
                 className={`flex items-center px-4 py-2 rounded-lg ${
@@ -367,12 +440,25 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                 Manage Reservations
               </button>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full"
-            >
-              <X className="h-6 w-6" />
-            </button>
+
+            <div className="lg:hidden flex items-center">
+              <h2 className="text-xl font-semibold">
+                {activeTab === 'book' && 'Book Now'}
+                {activeTab === 'quote' && 'Price Quote'}
+                {activeTab === 'receipts' && 'Quick Receipts'}
+                {activeTab === 'manage' && 'Manage Reservations'}
+              </h2>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              {renderMobileMenu()}
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-full"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
           </div>
 
           {activeTab === 'book' && bookingStep === 'details' && renderBookingForm()}

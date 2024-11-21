@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { Users, Briefcase, LayoutGrid, List } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, Briefcase, LayoutGrid, List, Info } from 'lucide-react';
 import { motion } from 'framer-motion';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface VehicleSelectionProps {
   onBack: () => void;
@@ -89,6 +96,20 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
 }) => {
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      if (window.innerWidth < 1024) {
+        setViewMode('list');
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -269,23 +290,43 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Select Vehicle</h2>
-        <div className="flex items-center space-x-2 bg-gray-100 p-1 rounded-lg">
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-md ${
-              viewMode === 'grid' ? 'bg-white shadow' : ''
-            }`}
-          >
-            <LayoutGrid className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => setViewMode('list')}
-            className={`p-2 rounded-md ${
-              viewMode === 'list' ? 'bg-white shadow' : ''
-            }`}
-          >
-            <List className="h-5 w-5" />
-          </button>
+        <div className="flex items-center space-x-2">
+          {isMobile ? (
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="p-2 rounded-md hover:bg-gray-100">
+                  <Info className="h-5 w-5" />
+                </button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Trip Details</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  {renderTripDetails()}
+                </div>
+              </SheetContent>
+            </Sheet>
+          ) : (
+            <div className="bg-gray-100 p-1 rounded-lg">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-md ${
+                  viewMode === 'grid' ? 'bg-white shadow' : ''
+                }`}
+              >
+                <LayoutGrid className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-md ${
+                  viewMode === 'list' ? 'bg-white shadow' : ''
+                }`}
+              >
+                <List className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -301,9 +342,11 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
             </div>
           )}
         </div>
-        <div className="w-1/3">
-          {renderTripDetails()}
-        </div>
+        {!isMobile && (
+          <div className="w-1/3">
+            {renderTripDetails()}
+          </div>
+        )}
       </div>
 
       <div className="flex justify-between pt-6">
@@ -321,6 +364,25 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
           Continue
         </button>
       </div>
+
+      {isMobile && selectedVehicle && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-gray-600">Estimated Price</p>
+              <p className="text-xl font-bold">
+                ${calculateEstimatedPrice(vehicles.find(v => v.id === selectedVehicle)!).toFixed(2)}
+              </p>
+            </div>
+            <button
+              onClick={onContinue}
+              className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

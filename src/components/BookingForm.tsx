@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, Calendar, Calculator, Receipt, Clock } from 'lucide-react';
-import { toast } from 'sonner';
+import { Toaster } from 'sonner';
+import { Car, Calendar, Calculator, Receipt, Clock } from 'lucide-react';
 import BookingMap from './booking/BookingMap';
 import ServiceTypeToggle from './booking/ServiceTypeToggle';
 import RideToggle from './booking/RideToggle';
@@ -42,7 +42,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [travelers, setTravelers] = useState(0);
   const [kids, setKids] = useState(0);
   const [bags, setBags] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [quotePrice, setQuotePrice] = useState<{ min: number; max: number } | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
 
@@ -185,7 +184,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
           <ActionButtons
             onCancel={onClose}
-            loading={loading}
             submitLabel="Continue"
           />
         </div>

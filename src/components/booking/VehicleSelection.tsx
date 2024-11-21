@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Car, Users, Briefcase, LayoutGrid, List } from 'lucide-react';
+import { Users, Briefcase, LayoutGrid, List } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface VehicleSelectionProps {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, CreditCard, Info, User, Users } from 'lucide-react';
+import { CreditCard, Info } from 'lucide-react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
@@ -15,7 +15,7 @@ interface PaymentFormProps {
     travelers: number;
     kids: number;
     bags: number;
-    vehicle?: {
+    vehicle: {
       name: string;
       price: number;
     };
@@ -110,6 +110,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       .substr(0, 5);
   };
 
+  const serviceFee = bookingDetails.vehicle?.price ? bookingDetails.vehicle.price * 0.1 : 0;
+  const totalPrice = bookingDetails.vehicle?.price ? bookingDetails.vehicle.price + serviceFee : 0;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex gap-6">
@@ -120,10 +123,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             animate={{ opacity: 1, y: 0 }}
             className="bg-white p-6 rounded-lg shadow-sm"
           >
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Users className="h-5 w-5 mr-2" />
-              Passenger Information
-            </h3>
+            <h3 className="text-lg font-semibold mb-4">Passenger Information</h3>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -371,8 +371,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-1/3"
-        >
+          className="w-1/3" >
+        
           <div className="bg-gray-50 p-6 rounded-lg space-y-4 sticky top-24">
             <h3 className="text-lg font-semibold mb-4">Booking Summary</h3>
             
@@ -402,21 +402,21 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
             <div>
               <p className="text-sm font-medium text-gray-600">Vehicle</p>
-              <p className="text-gray-900">{bookingDetails.vehicle?.name}</p>
+              <p className="text-gray-900">{bookingDetails.vehicle.name}</p>
             </div>
 
             <div className="border-t border-gray-200 pt-4 mt-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium">Base Fare</span>
-                <span>${bookingDetails.vehicle?.price.toFixed(2)}</span>
+                <span>${bookingDetails.vehicle.price.toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center mb-2">
                 <span className="font-medium">Service Fee</span>
-                <span>${(bookingDetails.vehicle?.price * 0.1).toFixed(2)}</span>
+                <span>${serviceFee.toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center text-lg font-bold pt-2 border-t">
                 <span>Total</span>
-                <span>${(bookingDetails.vehicle?.price * 1.1).toFixed(2)}</span>
+                <span>${totalPrice.toFixed(2)}</span>
               </div>
             </div>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Toaster } from 'sonner';
-import { Car, Calendar, Calculator, Receipt, Clock } from 'lucide-react';
+import { toast, Toaster } from 'sonner';
+import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
 import BookingMap from './booking/BookingMap';
 import ServiceTypeToggle from './booking/ServiceTypeToggle';
 import RideToggle from './booking/RideToggle';

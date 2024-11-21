@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calculator, Receipt, Calendar } from 'lucide-react';
+import { X, Calculator, Receipt, Calendar, Plus, Clock, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import BookingMap from './booking/BookingMap';
 
@@ -19,8 +19,14 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('book');
   const [pickup, setPickup] = useState<Location>();
   const [dropoff, setDropoff] = useState<Location>();
+  const [quotePickup, setQuotePickup] = useState<Location>();
+  const [quoteDropoff, setQuoteDropoff] = useState<Location>();
+  const [stops, setStops] = useState<Location[]>([]);
+  const [quoteStops, setQuoteStops] = useState<Location[]>([]);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [quoteDate, setQuoteDate] = useState('');
+  const [quoteTime, setQuoteTime] = useState('');
   const [passengers, setPassengers] = useState(1);
   const [vehicleType, setVehicleType] = useState('sedan');
   const [formData, setFormData] = useState({
@@ -31,7 +37,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
 
   // Simulated geocoding function
-  const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff') => {
+  const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number, isQuote: boolean = false) => {
     const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {
       'LAX': { name: 'Los Angeles International Airport', lat: 33.9416, lng: -118.4085 },
       'Beverly Hills': { name: 'Beverly Hills', lat: 34.0736, lng: -118.4004 },
@@ -52,10 +58,26 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
         address: locationData.name
       };
       
-      if (type === 'pickup') {
-        setPickup(newLocation);
+      if (isQuote) {
+        if (type === 'pickup') {
+          setQuotePickup(newLocation);
+        } else if (type === 'dropoff') {
+          setQuoteDropoff(newLocation);
+        } else if (type === 'stop' && typeof stopIndex === 'number') {
+          const newStops = [...quoteStops];
+          newStops[stopIndex] = newLocation;
+          setQuoteStops(newStops);
+        }
       } else {
-        setDropoff(newLocation);
+        if (type === 'pickup') {
+          setPickup(newLocation);
+        } else if (type === 'dropoff') {
+          setDropoff(newLocation);
+        } else if (type === 'stop' && typeof stopIndex === 'number') {
+          const newStops = [...stops];
+          newStops[stopIndex] = newLocation;
+          setStops(newStops);
+        }
       }
     }
   };
@@ -73,6 +95,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       
       const bookingData = {
         pickup,
+        stops,
         dropoff,
         date,
         time,
@@ -89,6 +112,40 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       toast.error('Failed to submit booking');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGetQuote = () => {
+    if (!quotePickup || !quoteDropoff || !quoteDate || !quoteTime) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+    // Simulate quote calculation
+    toast.success('Quote calculated successfully');
+  };
+
+  const handleResetQuote = () => {
+    setQuotePickup(undefined);
+    setQuoteDropoff(undefined);
+    setQuoteStops([]);
+    setQuoteDate('');
+    setQuoteTime('');
+    toast.success('Quote form reset');
+  };
+
+  const addStop = (isQuote: boolean = false) => {
+    if (isQuote) {
+      setQuoteStops([...quoteStops, { lat: 0, lng: 0, address: '' }]);
+    } else {
+      setStops([...stops, { lat: 0, lng: 0, address: '' }]);
+    }
+  };
+
+  const removeStop = (index: number, isQuote: boolean = false) => {
+    if (isQuote) {
+      setQuoteStops(quoteStops.filter((_, i) => i !== index));
+    } else {
+      setStops(stops.filter((_, i) => i !== index));
     }
   };
 
@@ -116,6 +173,32 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                     )}
                   </div>
 
+                  {stops.map((stop, index) => (
+                    <div key={index}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Stop #{index + 1}
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Enter stop address"
+                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          onChange={(e) => handleLocationInput(e.target.value, 'stop', index)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeStop(index)}
+                          className="p-2 text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                      {stop.address && (
+                        <p className="mt-1 text-sm text-gray-500">{stop.address}</p>
+                      )}
+                    </div>
+                  ))}
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Dropoff Location
@@ -130,32 +213,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                     {dropoff && (
                       <p className="mt-1 text-sm text-gray-500">{dropoff.address}</p>
                     )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Date
-                    </label>
-                    <input
-                      type="date"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Time
-                    </label>
-                    <input
-                      type="time"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                      required
-                    />
                   </div>
 
                   <div>
@@ -189,6 +246,15 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                     />
                   </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => addStop()}
+                  className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Stop
+                </button>
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Contact Information</h3>
@@ -234,7 +300,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
               </div>
 
               <div className="w-[300px]">
-                <BookingMap pickup={pickup} dropoff={dropoff} />
+                <BookingMap pickup={pickup} dropoff={dropoff} stops={stops} />
               </div>
             </div>
 
@@ -260,54 +326,126 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       case 'quote':
         return (
           <div className="space-y-6">
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Get a Price Quote</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Pickup Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter pickup location"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+            <div className="flex gap-6">
+              <div className="flex-1 bg-gray-50 p-6 rounded-lg">
+                <h3 className="text-lg font-semibold mb-4">Get a Price Quote</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <Calendar className="inline-block h-4 w-4 mr-1" />
+                        Pickup Date
+                      </label>
+                      <input
+                        type="date"
+                        placeholder="Select date"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={quoteDate}
+                        onChange={(e) => setQuoteDate(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <Clock className="inline-block h-4 w-4 mr-1" />
+                        Pickup Time
+                      </label>
+                      <input
+                        type="time"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={quoteTime}
+                        onChange={(e) => setQuoteTime(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Pickup Location
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter location"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) => handleLocationInput(e.target.value, 'pickup', undefined, true)}
+                    />
+                    {quotePickup && (
+                      <p className="mt-1 text-sm text-gray-500">{quotePickup.address}</p>
+                    )}
+                  </div>
+
+                  {quoteStops.map((stop, index) => (
+                    <div key={index}>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Stop #{index + 1}
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Enter stop location"
+                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          onChange={(e) => handleLocationInput(e.target.value, 'stop', index, true)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeStop(index, true)}
+                          className="p-2 text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                      {stop.address && (
+                        <p className="mt-1 text-sm text-gray-500">{stop.address}</p>
+                      )}
+                    </div>
+                  ))}
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Dropoff Location
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter location"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) => handleLocationInput(e.target.value, 'dropoff', undefined, true)}
+                    />
+                    {quoteDropoff && (
+                      <p className="mt-1 text-sm text-gray-500">{quoteDropoff.address}</p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => addStop(true)}
+                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Stop
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Dropoff Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter dropoff location"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vehicle Type
-                  </label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="sedan">Mercedes-Benz S-Class</option>
-                    <option value="suv">Cadillac Escalade</option>
-                    <option value="van">Mercedes-Benz Sprinter</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Service Type
-                  </label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="one-way">One Way</option>
-                    <option value="hourly">Hourly Charter</option>
-                    <option value="round-trip">Round Trip</option>
-                  </select>
+                <div className="flex space-x-4 mt-6">
+                  <button 
+                    onClick={handleResetQuote}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    Reset
+                  </button>
+                  <button 
+                    onClick={handleGetQuote}
+                    className="flex-1 bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+                  >
+                    Get Quote
+                  </button>
                 </div>
               </div>
-              <button className="mt-6 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
-                Calculate Quote
-              </button>
+
+              <div className="w-[300px]">
+                <BookingMap pickup={quotePickup} dropoff={quoteDropoff} stops={quoteStops} />
+              </div>
             </div>
+
             <div className="bg-blue-50 p-6 rounded-lg">
               <h4 className="font-semibold mb-2">Estimated Price Range</h4>
               <p className="text-2xl font-bold text-blue-600">$120 - $150</p>
@@ -387,59 +525,57 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Book Your Ride</h2>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setActiveTab('book')}
+                className={`flex items-center px-4 py-2 rounded-lg ${
+                  activeTab === 'book'
+                    ? 'bg-black text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Calendar className="h-5 w-5 mr-2" />
+                Book Now
+              </button>
+              <button
+                onClick={() => setActiveTab('quote')}
+                className={`flex items-center px-4 py-2 rounded-lg ${
+                  activeTab === 'quote'
+                    ? 'bg-black text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Calculator className="h-5 w-5 mr-2" />
+                Price Quote
+              </button>
+              <button
+                onClick={() => setActiveTab('receipts')}
+                className={`flex items-center px-4 py-2 rounded-lg ${
+                  activeTab === 'receipts'
+                    ? 'bg-black text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Receipt className="h-5 w-5 mr-2" />
+                Quick Receipts
+              </button>
+              <button
+                onClick={() => setActiveTab('manage')}
+                className={`flex items-center px-4 py-2 rounded-lg ${
+                  activeTab === 'manage'
+                    ? 'bg-black text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Calendar className="h-5 w-5 mr-2" />
+                Manage Reservations
+              </button>
+            </div>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full"
             >
               <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          <div className="flex space-x-4 mb-6">
-            <button
-              onClick={() => setActiveTab('book')}
-              className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'book'
-                  ? 'bg-black text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Calendar className="h-5 w-5 mr-2" />
-              Book Now
-            </button>
-            <button
-              onClick={() => setActiveTab('quote')}
-              className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'quote'
-                  ? 'bg-black text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Calculator className="h-5 w-5 mr-2" />
-              Price Quote
-            </button>
-            <button
-              onClick={() => setActiveTab('receipts')}
-              className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'receipts'
-                  ? 'bg-black text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Receipt className="h-5 w-5 mr-2" />
-              Quick Receipts
-            </button>
-            <button
-              onClick={() => setActiveTab('manage')}
-              className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'manage'
-                  ? 'bg-black text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Calendar className="h-5 w-5 mr-2" />
-              Manage Reservations
             </button>
           </div>
 

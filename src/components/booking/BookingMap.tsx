@@ -25,14 +25,16 @@ interface Location {
 interface BookingMapProps {
   pickup?: Location;
   dropoff?: Location;
+  stops?: Location[];
   onPickupChange?: (location: Location) => void;
   onDropoffChange?: (location: Location) => void;
 }
 
 const MapUpdater: React.FC<{ 
   pickup?: Location,
-  dropoff?: Location 
-}> = ({ pickup, dropoff }) => {
+  dropoff?: Location,
+  stops?: Location[]
+}> = ({ pickup, dropoff, stops = [] }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -45,11 +47,14 @@ const MapUpdater: React.FC<{
 
     // Add routing if both pickup and dropoff are set
     if (pickup && dropoff) {
+      const waypoints = [
+        L.latLng(pickup.lat, pickup.lng),
+        ...stops.filter(stop => stop.lat && stop.lng).map(stop => L.latLng(stop.lat, stop.lng)),
+        L.latLng(dropoff.lat, dropoff.lng)
+      ];
+
       const routingControl = L.Routing.control({
-        waypoints: [
-          L.latLng(pickup.lat, pickup.lng),
-          L.latLng(dropoff.lat, dropoff.lng)
-        ],
+        waypoints,
         routeWhileDragging: false,
         addWaypoints: false,
         fitSelectedRoutes: true,
@@ -67,11 +72,8 @@ const MapUpdater: React.FC<{
         container.style.display = 'none';
       }
 
-      // Fit bounds to include both markers
-      const bounds = L.latLngBounds([
-        [pickup.lat, pickup.lng],
-        [dropoff.lat, dropoff.lng]
-      ]);
+      // Fit bounds to include all points
+      const bounds = L.latLngBounds(waypoints);
       map.fitBounds(bounds, { padding: [50, 50] });
     } else if (pickup) {
       map.setView([pickup.lat, pickup.lng], 13);
@@ -89,12 +91,12 @@ const MapUpdater: React.FC<{
         }
       });
     };
-  }, [map, pickup, dropoff]);
+  }, [map, pickup, dropoff, stops]);
 
   return null;
 };
 
-const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff, onPickupChange, onDropoffChange }) => {
+const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff, stops = [], onPickupChange, onDropoffChange }) => {
   const defaultCenter: [number, number] = [34.0522, -118.2437]; // Los Angeles coordinates
 
   const handleMarkerDragEnd = async (type: 'pickup' | 'dropoff', event: L.LeafletEvent) => {
@@ -133,6 +135,7 @@ const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff, onPickupChange
         <MapUpdater
           pickup={pickup}
           dropoff={dropoff}
+          stops={stops}
         />
         {pickup && (
           <Marker 
@@ -143,6 +146,15 @@ const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff, onPickupChange
             }}
           />
         )}
+        {stops.map((stop, index) => (
+          stop.lat && stop.lng && (
+            <Marker 
+              key={index}
+              position={[stop.lat, stop.lng]}
+              draggable={true}
+            />
+          )
+        ))}
         {dropoff && (
           <Marker 
             position={[dropoff.lat, dropoff.lng]}

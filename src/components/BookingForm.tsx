@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Calculator, Receipt, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
 import BookingMap from './booking/BookingMap';
 
@@ -13,7 +13,10 @@ interface BookingFormProps {
   onClose: () => void;
 }
 
+type TabType = 'book' | 'quote' | 'receipts' | 'manage';
+
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
+  const [activeTab, setActiveTab] = useState<TabType>('book');
   const [pickup, setPickup] = useState<Location>();
   const [dropoff, setDropoff] = useState<Location>();
   const [date, setDate] = useState('');
@@ -29,8 +32,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
   // Simulated geocoding function
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff') => {
-    // In a real app, you would use a geocoding service here
-    // For demo purposes, we'll use dummy coordinates
     const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {
       'LAX': { name: 'Los Angeles International Airport', lat: 33.9416, lng: -118.4085 },
       'Beverly Hills': { name: 'Beverly Hills', lat: 34.0736, lng: -118.4004 },
@@ -68,7 +69,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
     try {
       setLoading(true);
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       const bookingData = {
@@ -92,153 +92,149 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     }
   };
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Book Your Ride</h2>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'book':
+        return (
           <form onSubmit={handleSubmit} className="space-y-6">
-            <BookingMap pickup={pickup} dropoff={dropoff} />
+            <div className="flex gap-6">
+              <div className="flex-1 space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Pickup Location
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter pickup address (try LAX, Beverly Hills, etc.)"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) => handleLocationInput(e.target.value, 'pickup')}
+                      required
+                    />
+                    {pickup && (
+                      <p className="mt-1 text-sm text-gray-500">{pickup.address}</p>
+                    )}
+                  </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Pickup Location
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter pickup address (try LAX, Beverly Hills, etc.)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  onChange={(e) => handleLocationInput(e.target.value, 'pickup')}
-                  required
-                />
-                {pickup && (
-                  <p className="mt-1 text-sm text-gray-500">{pickup.address}</p>
-                )}
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Dropoff Location
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter dropoff address (try Santa Monica, Hollywood, etc.)"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) => handleLocationInput(e.target.value, 'dropoff')}
+                      required
+                    />
+                    {dropoff && (
+                      <p className="mt-1 text-sm text-gray-500">{dropoff.address}</p>
+                    )}
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Dropoff Location
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter dropoff address (try Santa Monica, Hollywood, etc.)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  onChange={(e) => handleLocationInput(e.target.value, 'dropoff')}
-                  required
-                />
-                {dropoff && (
-                  <p className="mt-1 text-sm text-gray-500">{dropoff.address}</p>
-                )}
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Time
+                    </label>
+                    <input
+                      type="time"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      required
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Time
-                </label>
-                <input
-                  type="time"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  required
-                />
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Vehicle Type
+                    </label>
+                    <select
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={vehicleType}
+                      onChange={(e) => setVehicleType(e.target.value)}
+                      required
+                    >
+                      <option value="sedan">Mercedes-Benz S-Class</option>
+                      <option value="suv">Cadillac Escalade</option>
+                      <option value="van">Mercedes-Benz Sprinter</option>
+                    </select>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Vehicle Type
-                </label>
-                <select
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={vehicleType}
-                  onChange={(e) => setVehicleType(e.target.value)}
-                  required
-                >
-                  <option value="sedan">Mercedes-Benz S-Class</option>
-                  <option value="suv">Cadillac Escalade</option>
-                  <option value="van">Mercedes-Benz Sprinter</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Passengers
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="12"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={passengers}
-                  onChange={(e) => setPassengers(parseInt(e.target.value))}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Contact Information</h3>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Passengers
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="12"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={passengers}
+                      onChange={(e) => setPassengers(parseInt(e.target.value))}
+                      required
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                  />
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Contact Information</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone
+                      </label>
+                      <input
+                        type="tel"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    required
-                  />
-                </div>
+              </div>
+
+              <div className="w-[300px]">
+                <BookingMap pickup={pickup} dropoff={dropoff} />
               </div>
             </div>
 
@@ -259,6 +255,195 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
               </button>
             </div>
           </form>
+        );
+
+      case 'quote':
+        return (
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Get a Price Quote</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Pickup Location
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter pickup location"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Dropoff Location
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter dropoff location"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Vehicle Type
+                  </label>
+                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="sedan">Mercedes-Benz S-Class</option>
+                    <option value="suv">Cadillac Escalade</option>
+                    <option value="van">Mercedes-Benz Sprinter</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Service Type
+                  </label>
+                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="one-way">One Way</option>
+                    <option value="hourly">Hourly Charter</option>
+                    <option value="round-trip">Round Trip</option>
+                  </select>
+                </div>
+              </div>
+              <button className="mt-6 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
+                Calculate Quote
+              </button>
+            </div>
+            <div className="bg-blue-50 p-6 rounded-lg">
+              <h4 className="font-semibold mb-2">Estimated Price Range</h4>
+              <p className="text-2xl font-bold text-blue-600">$120 - $150</p>
+              <p className="text-sm text-gray-600 mt-2">
+                Final price may vary based on traffic, waiting time, and other factors.
+              </p>
+            </div>
+          </div>
+        );
+
+      case 'receipts':
+        return (
+          <div className="space-y-6">
+            <div className="bg-white border rounded-lg divide-y">
+              <div className="p-4">
+                <h3 className="font-semibold mb-2">Recent Receipts</h3>
+                <p className="text-sm text-gray-600">
+                  Enter your booking ID or email to find your receipt
+                </p>
+              </div>
+              <div className="p-4">
+                <div className="flex gap-4">
+                  <input
+                    type="text"
+                    placeholder="Booking ID or Email"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
+                    Search
+                  </button>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-center text-gray-500">
+                  No recent receipts found
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'manage':
+        return (
+          <div className="space-y-6">
+            <div className="bg-white border rounded-lg divide-y">
+              <div className="p-4">
+                <h3 className="font-semibold mb-2">Manage Reservations</h3>
+                <p className="text-sm text-gray-600">
+                  View, modify, or cancel your upcoming reservations
+                </p>
+              </div>
+              <div className="p-4">
+                <div className="flex gap-4">
+                  <input
+                    type="text"
+                    placeholder="Confirmation Number"
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
+                    Find Booking
+                  </button>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-center text-gray-500">
+                  No active reservations found
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Book Your Ride</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="flex space-x-4 mb-6">
+            <button
+              onClick={() => setActiveTab('book')}
+              className={`flex items-center px-4 py-2 rounded-lg ${
+                activeTab === 'book'
+                  ? 'bg-black text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Calendar className="h-5 w-5 mr-2" />
+              Book Now
+            </button>
+            <button
+              onClick={() => setActiveTab('quote')}
+              className={`flex items-center px-4 py-2 rounded-lg ${
+                activeTab === 'quote'
+                  ? 'bg-black text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Calculator className="h-5 w-5 mr-2" />
+              Price Quote
+            </button>
+            <button
+              onClick={() => setActiveTab('receipts')}
+              className={`flex items-center px-4 py-2 rounded-lg ${
+                activeTab === 'receipts'
+                  ? 'bg-black text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Receipt className="h-5 w-5 mr-2" />
+              Quick Receipts
+            </button>
+            <button
+              onClick={() => setActiveTab('manage')}
+              className={`flex items-center px-4 py-2 rounded-lg ${
+                activeTab === 'manage'
+                  ? 'bg-black text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Calendar className="h-5 w-5 mr-2" />
+              Manage Reservations
+            </button>
+          </div>
+
+          {renderTabContent()}
         </div>
       </div>
     </div>

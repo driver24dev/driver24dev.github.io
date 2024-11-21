@@ -51,22 +51,3 @@
   width: 100%;
   height: 100%;
 }
-
-/* Custom marker styles */
-.custom-marker {
-  background: none;
-  border: none;
-}
-
-.custom-marker div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-weight: bold;
-  color: white;
-  border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}

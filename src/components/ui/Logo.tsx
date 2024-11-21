@@ -17,13 +17,13 @@ const Logo: React.FC<LogoProps> = ({ customLogo, onClick }) => {
       {customLogo ? (
         <img 
           src={customLogo} 
-          alt="LA Elite Chauffeur" 
+          alt="LA Elite" 
           className="h-8 w-auto"
         />
       ) : (
         <>
           <Car className="h-6 w-6 text-white" />
-          <span className="text-xl font-bold text-white">LA Elite Chauffeur</span>
+          <span className="text-xl font-bold text-white">LA Elite</span>
         </>
       )}
     </a>

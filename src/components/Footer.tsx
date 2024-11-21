@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
           <div>
             <div className="flex items-center space-x-2 mb-6">
               <Car className="h-6 w-6" />
-              <span className="text-xl font-bold">LA Elite Chauffeur</span>
+              <span className="text-xl font-bold">LA Elite</span>
             </div>
             <p className="text-gray-400 mb-6">
               Providing luxury transportation services in Los Angeles and surrounding areas.
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2">
               <li className="text-gray-400">(310) 555-0123</li>
-              <li className="text-gray-400">bookings@laelitechauffeur.com</li>
+              <li className="text-gray-400">bookings@laelite.com</li>
               <li className="text-gray-400">9876 Wilshire Boulevard</li>
               <li className="text-gray-400">Beverly Hills, CA 90210</li>
             </ul>
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} LA Elite Chauffeur. All rights reserved.
+              © {new Date().getFullYear()} LA Elite. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-gray-400 hover:text-white text-sm transition">Privacy Policy</a>

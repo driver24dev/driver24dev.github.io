@@ -5,6 +5,17 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'leaflet-routing-machine';
 
+// Override default Leaflet marker icons
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: '/images/pickup-marker.png',
+  iconRetinaUrl: '/images/pickup-marker.png',
+  shadowUrl: null,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32]
+});
+
 interface Location {
   lat: number;
   lng: number;
@@ -14,6 +25,8 @@ interface Location {
 interface BookingMapProps {
   pickup?: Location;
   dropoff?: Location;
+  onPickupChange?: (location: Location) => void;
+  onDropoffChange?: (location: Location) => void;
 }
 
 const MapUpdater: React.FC<{ 
@@ -81,8 +94,30 @@ const MapUpdater: React.FC<{
   return null;
 };
 
-const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff }) => {
+const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff, onPickupChange, onDropoffChange }) => {
   const defaultCenter: [number, number] = [34.0522, -118.2437]; // Los Angeles coordinates
+
+  const handleMarkerDragEnd = async (type: 'pickup' | 'dropoff', event: L.LeafletEvent) => {
+    const marker = event.target;
+    const position = marker.getLatLng();
+    
+    try {
+      // Simulate reverse geocoding with a dummy address
+      const newLocation: Location = {
+        lat: position.lat,
+        lng: position.lng,
+        address: `${position.lat.toFixed(4)}, ${position.lng.toFixed(4)}`
+      };
+
+      if (type === 'pickup' && onPickupChange) {
+        onPickupChange(newLocation);
+      } else if (type === 'dropoff' && onDropoffChange) {
+        onDropoffChange(newLocation);
+      }
+    } catch (error) {
+      console.error('Error updating location:', error);
+    }
+  };
 
   return (
     <div className="h-[400px] rounded-lg overflow-hidden">
@@ -100,10 +135,22 @@ const BookingMap: React.FC<BookingMapProps> = ({ pickup, dropoff }) => {
           dropoff={dropoff}
         />
         {pickup && (
-          <Marker position={[pickup.lat, pickup.lng]} />
+          <Marker 
+            position={[pickup.lat, pickup.lng]}
+            draggable={true}
+            eventHandlers={{
+              dragend: (e) => handleMarkerDragEnd('pickup', e)
+            }}
+          />
         )}
         {dropoff && (
-          <Marker position={[dropoff.lat, dropoff.lng]} />
+          <Marker 
+            position={[dropoff.lat, dropoff.lng]}
+            draggable={true}
+            eventHandlers={{
+              dragend: (e) => handleMarkerDragEnd('dropoff', e)
+            }}
+          />
         )}
       </MapContainer>
     </div>

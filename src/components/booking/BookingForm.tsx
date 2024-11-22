@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Calendar, Calculator, Receipt, Clock, X, Menu } from 'lucide-react';
+import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
 import BookingMap from './BookingMap';
 import ServiceTypeToggle from './ServiceTypeToggle';
 import RideToggle from './RideToggle';
@@ -51,7 +51,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [bags, setBags] = useState(0);
   const [quotePrice, setQuotePrice] = useState<{ min: number; max: number } | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
     const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {
@@ -252,7 +251,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
       {quotePrice && (
         <div className="bg-blue-50 p-6 rounded-lg">
-          <h4 className="font-semibold mb-2 text-gray-900">Estimated Price Range</h4>
+          <h4 className="font-semibold mb-2">Estimated Price Range</h4>
           <p className="text-2xl font-bold text-blue-600">
             ${quotePrice.min} - ${quotePrice.max}
           </p>
@@ -386,7 +385,56 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
             </div>
 
             <div className="flex items-center space-x-4">
-              {renderMobileMenu()}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button className="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
+                    <Calendar className="h-6 w-6" />
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] bg-white">
+                  <SheetHeader>
+                    <SheetTitle>Menu</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-2">
+                    <button
+                      onClick={() => setActiveTab('book')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'book' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Calendar className="h-5 w-5" />
+                      <span>Book Now</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('quote')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'quote' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Calculator className="h-5 w-5" />
+                      <span>Price Quote</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('receipts')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'receipts' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Receipt className="h-5 w-5" />
+                      <span>Quick Receipts</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('manage')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'manage' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Clock className="h-5 w-5" />
+                      <span>Manage Reservations</span>
+                    </button>
+                  </div>
+                </SheetContent>
+              </Sheet>
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-gray-100 rounded-full text-gray-900"

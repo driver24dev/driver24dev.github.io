@@ -49,8 +49,8 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
     <section id="pricing" className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Transparent Pricing</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-gray-900">Transparent Pricing</h2>
+          <p className="text-xl text-gray-900 max-w-2xl mx-auto">
             Choose the perfect service package for your transportation needs
           </p>
         </div>
@@ -61,16 +61,16 @@ const Pricing: React.FC<PricingProps> = ({ onBookNow }) => {
               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="p-8">
-                <h3 className="text-2xl font-bold mb-4">{plan.name}</h3>
+                <h3 className="text-2xl font-bold mb-4 text-gray-900">{plan.name}</h3>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">${plan.price}</span>
-                  {plan.name === 'Hourly Charter' && <span className="text-gray-600">/hour</span>}
+                  <span className="text-4xl font-bold text-gray-900">${plan.price}</span>
+                  {plan.name === 'Hourly Charter' && <span className="text-gray-900">/hour</span>}
                 </div>
                 <ul className="space-y-4 mb-8">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-center">
                       <Check className="h-5 w-5 text-green-500 mr-2" />
-                      <span>{feature}</span>
+                      <span className="text-gray-900">{feature}</span>
                     </li>
                   ))}
                 </ul>

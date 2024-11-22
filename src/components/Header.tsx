@@ -76,13 +76,13 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
-                <span className="text-white">{user?.name}</span>
+                <span className="text-gray-200">{user?.name}</span>
                 {isAdmin() && (
-                  <Shield className="h-5 w-5 text-white" />
+                  <Shield className="h-5 w-5 text-gray-200" />
                 )}
                 <button
                   onClick={logout}
-                  className="text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+                  className="text-gray-200 hover:bg-gray-800 p-2 rounded-full transition-colors"
                 >
                   <LogOut className="h-5 w-5" />
                 </button>
@@ -90,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+                className="text-gray-200 hover:bg-gray-800 p-2 rounded-full transition-colors"
               >
                 <User className="h-5 w-5" />
               </button>
@@ -98,14 +98,14 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
             {showBooking && (
               <button
                 onClick={onBookNow}
-                className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition"
+                className="bg-gray-100 text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition"
               >
                 {t('bookNow')}
               </button>
             )}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="text-white hover:bg-white/10 p-2 rounded-full transition-colors">
+                <button className="text-gray-200 hover:bg-gray-800 p-2 rounded-full transition-colors">
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
@@ -114,22 +114,22 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
                 className="w-[300px] sm:w-[400px] bg-black/95 backdrop-blur-lg border-l border-gray-800"
               >
                 <SheetHeader className="flex justify-between items-center">
-                  <SheetTitle className="text-white text-2xl font-bold">{t('menu')}</SheetTitle>
+                  <SheetTitle className="text-gray-100 text-2xl font-bold">{t('menu')}</SheetTitle>
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={toggleLanguage}
-                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                      className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
                     >
-                      <Languages className="h-5 w-5 text-white" />
+                      <Languages className="h-5 w-5 text-gray-200" />
                     </button>
                     <button
                       onClick={toggleTheme}
-                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                      className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
                     >
                       {theme === 'dark' ? (
-                        <Sun className="h-5 w-5 text-white" />
+                        <Sun className="h-5 w-5 text-gray-200" />
                       ) : (
-                        <Moon className="h-5 w-5 text-white" />
+                        <Moon className="h-5 w-5 text-gray-200" />
                       )}
                     </button>
                   </div>
@@ -139,9 +139,9 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
                     <a
                       key={index}
                       href={item.href}
-                      className="flex items-center space-x-3 text-white hover:bg-white/10 p-3 rounded-lg transition-colors group"
+                      className="flex items-center space-x-3 text-gray-200 hover:bg-gray-800 p-3 rounded-lg transition-colors group"
                     >
-                      <span className="p-2 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
+                      <span className="p-2 rounded-full bg-gray-800 group-hover:bg-gray-700 transition-colors">
                         {item.icon}
                       </span>
                       <span className="text-lg font-medium">{t(item.label)}</span>
@@ -152,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
                   <div className="absolute bottom-8 left-6 right-6">
                     <button
                       onClick={onBookNow}
-                      className="w-full bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center justify-center space-x-2"
+                      className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center justify-center space-x-2"
                     >
                       <Car className="h-5 w-5" />
                       <span>{t('bookYourRide')}</span>

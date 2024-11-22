@@ -46,7 +46,9 @@
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.7.1",
     "vaul": "^0.9.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@fontsource/inter": "^5.0.16",
+    "@fontsource/manrope": "^5.0.19"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.8",

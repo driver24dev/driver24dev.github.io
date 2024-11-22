@@ -60,13 +60,13 @@ const Fleet: React.FC = () => {
   };
 
   return (
-    <section id="fleet" className="py-20" ref={ref}>
+    <section id="fleet" className="py-20 bg-white" ref={ref}>
       <div className="container mx-auto px-6">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-bold text-center mb-12"
+          className="text-4xl font-bold text-center mb-12 text-gray-900"
         >
           {t('ourLuxuryFleet')}
         </motion.h2>
@@ -98,7 +98,7 @@ const Fleet: React.FC = () => {
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h3 className="text-xl font-semibold mb-2">{t(vehicle.name)}</h3>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{t(vehicle.name)}</h3>
                 <p className="text-gray-600 mb-4">{t(vehicle.description)}</p>
                 <p className="text-sm text-gray-500">
                   {t('fleetCapacity')}: {vehicle.capacity} {t('passengers')}

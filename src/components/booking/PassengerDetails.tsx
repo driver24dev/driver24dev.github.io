@@ -21,22 +21,22 @@ const PassengerDetails: React.FC<PassengerDetailsProps> = ({
   return (
     <div className="grid md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-lg">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-900 mb-2">
           Travelers
         </label>
         <div className="flex items-center space-x-4">
           <button
             type="button"
             onClick={() => onTravelersChange(Math.max(0, travelers - 1))}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
           >
             <Minus className="h-5 w-5" />
           </button>
-          <span className="text-xl font-semibold w-8 text-center">{travelers}</span>
+          <span className="text-xl font-semibold w-8 text-center text-gray-900">{travelers}</span>
           <button
             type="button"
             onClick={() => onTravelersChange(Math.min(8, travelers + 1))}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
           >
             <Plus className="h-5 w-5" />
           </button>
@@ -44,22 +44,22 @@ const PassengerDetails: React.FC<PassengerDetailsProps> = ({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-900 mb-2">
           Kids
         </label>
         <div className="flex items-center space-x-4">
           <button
             type="button"
             onClick={() => onKidsChange(Math.max(0, kids - 1))}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
           >
             <Minus className="h-5 w-5" />
           </button>
-          <span className="text-xl font-semibold w-8 text-center">{kids}</span>
+          <span className="text-xl font-semibold w-8 text-center text-gray-900">{kids}</span>
           <button
             type="button"
             onClick={() => onKidsChange(Math.min(4, kids + 1))}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
           >
             <Plus className="h-5 w-5" />
           </button>
@@ -67,22 +67,22 @@ const PassengerDetails: React.FC<PassengerDetailsProps> = ({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-900 mb-2">
           Bags
         </label>
         <div className="flex items-center space-x-4">
           <button
             type="button"
             onClick={() => onBagsChange(Math.max(0, bags - 1))}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
           >
             <Minus className="h-5 w-5" />
           </button>
-          <span className="text-xl font-semibold w-8 text-center">{bags}</span>
+          <span className="text-xl font-semibold w-8 text-center text-gray-900">{bags}</span>
           <button
             type="button"
             onClick={() => onBagsChange(Math.min(6, bags + 1))}
-            className="p-1 rounded-full hover:bg-gray-200"
+            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
           >
             <Plus className="h-5 w-5" />
           </button>

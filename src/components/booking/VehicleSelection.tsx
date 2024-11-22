@@ -331,7 +331,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
       </div>
 
       <div className="flex gap-6">
-        <div className={`${viewMode === 'grid' ? 'flex-1' : 'w-2/3'}`}>
+        <div className={`${isMobile ? 'w-full pr-0' : viewMode === 'grid' ? 'flex-1' : 'w-2/3'}`}>
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {vehicles.map(renderVehicleCard)}
@@ -349,7 +349,20 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
         )}
       </div>
 
-      <div className="flex justify-between pt-6">
+      {selectedVehicle && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-gray-600">Estimated Price</p>
+              <p className="text-2xl font-bold">
+                ${calculateEstimatedPrice(vehicles.find(v => v.id === selectedVehicle)!).toFixed(2)}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex justify-between">
         <button
           onClick={onBack}
           className="flex-1 mr-4 px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
@@ -364,25 +377,6 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
           Continue
         </button>
       </div>
-
-      {isMobile && selectedVehicle && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-600">Estimated Price</p>
-              <p className="text-xl font-bold">
-                ${calculateEstimatedPrice(vehicles.find(v => v.id === selectedVehicle)!).toFixed(2)}
-              </p>
-            </div>
-            <button
-              onClick={onContinue}
-              className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

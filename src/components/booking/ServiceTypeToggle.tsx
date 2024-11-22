@@ -13,7 +13,9 @@ const ServiceTypeToggle: React.FC<ServiceTypeToggleProps> = ({ serviceType, onSe
       <button
         type="button"
         className={`px-4 py-2 rounded-md text-sm font-medium transition ${
-          serviceType === 'transfer' ? 'bg-white shadow' : 'text-gray-600'
+          serviceType === 'transfer' 
+            ? 'bg-white text-gray-900 shadow' 
+            : 'text-gray-900 hover:bg-white/50'
         }`}
         onClick={() => onServiceTypeChange('transfer')}
       >
@@ -22,7 +24,9 @@ const ServiceTypeToggle: React.FC<ServiceTypeToggleProps> = ({ serviceType, onSe
       <button
         type="button"
         className={`px-4 py-2 rounded-md text-sm font-medium transition ${
-          serviceType === 'hourly' ? 'bg-white shadow' : 'text-gray-600'
+          serviceType === 'hourly' 
+            ? 'bg-white text-gray-900 shadow' 
+            : 'text-gray-900 hover:bg-white/50'
         }`}
         onClick={() => onServiceTypeChange('hourly')}
       >

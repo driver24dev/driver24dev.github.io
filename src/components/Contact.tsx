@@ -6,8 +6,8 @@ const Contact: React.FC = () => {
     <section id="contact" className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Contact Us</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-gray-900">Contact Us</h2>
+          <p className="text-xl text-gray-900 max-w-2xl mx-auto">
             Get in touch with our team for personalized service and support
           </p>
         </div>
@@ -19,9 +19,9 @@ const Contact: React.FC = () => {
                 <Phone className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Phone</h3>
-                <p className="text-gray-600">24/7 Booking: (310) 555-0123</p>
-                <p className="text-gray-600">Support: (310) 555-0124</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Phone</h3>
+                <p className="text-gray-900">24/7 Booking: (310) 555-0123</p>
+                <p className="text-gray-900">Support: (310) 555-0124</p>
               </div>
             </div>
 
@@ -30,9 +30,9 @@ const Contact: React.FC = () => {
                 <Mail className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Email</h3>
-                <p className="text-gray-600">Bookings: bookings@laelitechauffeur.com</p>
-                <p className="text-gray-600">Support: support@laelitechauffeur.com</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Email</h3>
+                <p className="text-gray-900">Bookings: bookings@laelitechauffeur.com</p>
+                <p className="text-gray-900">Support: support@laelitechauffeur.com</p>
               </div>
             </div>
 
@@ -41,10 +41,10 @@ const Contact: React.FC = () => {
                 <MapPin className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Location</h3>
-                <p className="text-gray-600">Beverly Hills Office</p>
-                <p className="text-gray-600">9876 Wilshire Boulevard</p>
-                <p className="text-gray-600">Beverly Hills, CA 90210</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Location</h3>
+                <p className="text-gray-900">Beverly Hills Office</p>
+                <p className="text-gray-900">9876 Wilshire Boulevard</p>
+                <p className="text-gray-900">Beverly Hills, CA 90210</p>
               </div>
             </div>
 
@@ -53,18 +53,18 @@ const Contact: React.FC = () => {
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Hours</h3>
-                <p className="text-gray-600">24/7 Service Available</p>
-                <p className="text-gray-600">Office: Mon-Fri 9AM-6PM PST</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Hours</h3>
+                <p className="text-gray-900">24/7 Service Available</p>
+                <p className="text-gray-900">Office: Mon-Fri 9AM-6PM PST</p>
               </div>
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-semibold mb-6">Send us a Message</h3>
+            <h3 className="text-2xl font-semibold mb-6 text-gray-900">Send us a Message</h3>
             <form className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Full Name
                 </label>
                 <input
@@ -73,7 +73,7 @@ const Contact: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Email
                 </label>
                 <input
@@ -82,7 +82,7 @@ const Contact: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-900 mb-2">
                   Message
                 </label>
                 <textarea

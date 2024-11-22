@@ -39,8 +39,8 @@ const Services: React.FC = () => {
     <section id="services" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Our Services</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-gray-900">Our Services</h2>
+          <p className="text-xl text-gray-900 max-w-2xl mx-auto">
             Experience the finest in luxury transportation with our comprehensive range of services
           </p>
         </div>
@@ -53,8 +53,8 @@ const Services: React.FC = () => {
               <div className="inline-block p-3 bg-black text-white rounded-lg mb-4">
                 {service.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
-              <p className="text-gray-600">{service.description}</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">{service.title}</h3>
+              <p className="text-gray-900">{service.description}</p>
             </div>
           ))}
         </div>

@@ -35,8 +35,8 @@ const FAQ: React.FC = () => {
     <section id="faq" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-gray-900">Frequently Asked Questions</h2>
+          <p className="text-xl text-gray-900 max-w-2xl mx-auto">
             Find answers to common questions about our services
           </p>
         </div>
@@ -47,16 +47,16 @@ const FAQ: React.FC = () => {
                 className="w-full flex justify-between items-center p-6 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-300"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
-                <span className="text-lg font-semibold text-left">{faq.question}</span>
+                <span className="text-lg font-semibold text-gray-900 text-left">{faq.question}</span>
                 {openIndex === index ? (
-                  <ChevronUp className="h-5 w-5" />
+                  <ChevronUp className="h-5 w-5 text-gray-900" />
                 ) : (
-                  <ChevronDown className="h-5 w-5" />
+                  <ChevronDown className="h-5 w-5 text-gray-900" />
                 )}
               </button>
               {openIndex === index && (
                 <div className="p-6 bg-white border border-gray-100 rounded-b-lg">
-                  <p className="text-gray-600">{faq.answer}</p>
+                  <p className="text-gray-900">{faq.answer}</p>
                 </div>
               )}
             </div>

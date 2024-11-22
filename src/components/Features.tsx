@@ -79,8 +79,8 @@ const Features: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4">{t('whyChooseUs')}</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4 text-gray-900">{t('whyChooseUs')}</h2>
+          <p className="text-xl text-gray-900 max-w-2xl mx-auto">
             {t('experienceDifference')}
           </p>
         </motion.div>
@@ -101,8 +101,8 @@ const Features: React.FC = () => {
               <div className="inline-block p-3 bg-black text-white rounded-lg mb-4">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-3">{t(feature.title)}</h3>
-              <p className="text-gray-600">{t(feature.description)}</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">{t(feature.title)}</h3>
+              <p className="text-gray-900">{t(feature.description)}</p>
             </motion.div>
           ))}
         </motion.div>

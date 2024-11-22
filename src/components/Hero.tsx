@@ -55,7 +55,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-6xl font-bold mb-6 leading-tight text-white"
+            className="text-5xl md:text-6xl font-bold mb-6 leading-tight text-gray-100"
           >
             {t('heroTitle')}
           </motion.h1>
@@ -63,7 +63,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl mb-8 text-gray-300"
+            className="text-xl md:text-2xl mb-8 text-gray-200"
           >
             {t('heroSubtitle')}
           </motion.p>
@@ -75,7 +75,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
           >
             <Button
               size="lg"
-              className="bg-white text-black hover:bg-gray-200 transition group relative overflow-hidden"
+              className="bg-gray-100 text-gray-900 hover:bg-gray-200 transition group relative overflow-hidden"
               onClick={onBookNow}
             >
               {t('bookNow')}
@@ -84,7 +84,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
             <Button
               size="lg"
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white hover:text-black transition"
+              className="border-2 border-gray-200 text-gray-100 hover:bg-gray-200 hover:text-gray-900 transition"
               asChild
             >
               <a href="#fleet">{t('viewFleet')}</a>
@@ -103,7 +103,7 @@ const Hero: React.FC<HeroProps> = ({ onBookNow }) => {
           href="#services"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="text-white flex flex-col items-center"
+          className="text-gray-200 flex flex-col items-center"
         >
           <span className="text-sm mb-2">{t('scrollExplore')}</span>
           <ArrowRight className="h-5 w-5 transform rotate-90" />

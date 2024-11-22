@@ -22,8 +22,8 @@ const Logo: React.FC<LogoProps> = ({ customLogo, onClick }) => {
         />
       ) : (
         <>
-          <Car className="h-6 w-6 text-white" />
-          <span className="text-xl font-bold text-white">LA Elite</span>
+          <Car className="h-6 w-6 text-gray-200" />
+          <span className="text-xl font-bold text-gray-200">LA Elite</span>
         </>
       )}
     </a>

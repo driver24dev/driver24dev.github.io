@@ -15,6 +15,16 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import DriverPortal from './components/driver/DriverPortal';
 import ClientPortal from './components/client/ClientPortal';
 import { useAuth } from './hooks/useAuth';
+import { ThemeProvider } from './components/ThemeProvider';
+import { LanguageProvider } from './components/LanguageProvider';
+
+// Import fonts
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/manrope/700.css';
+import '@fontsource/manrope/800.css';
 
 function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -29,30 +39,34 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen">
-      <Toaster position="top-center" />
-      <Header onBookNow={handleBookNow} showBooking={!isRestrictedUser} />
-      {isAdmin() ? (
-        <AdminDashboard />
-      ) : hasRole('driver') ? (
-        <DriverPortal />
-      ) : hasRole('client') ? (
-        <ClientPortal />
-      ) : (
-        <>
-          <Hero onBookNow={handleBookNow} />
-          <Features />
-          <Services />
-          <Fleet />
-          <Pricing onBookNow={handleBookNow} />
-          <Testimonials />
-          <FAQ />
-          <Contact />
-        </>
-      )}
-      <Footer />
-      {isBookingOpen && <BookingForm onClose={() => setIsBookingOpen(false)} />}
-    </div>
+    <ThemeProvider>
+      <LanguageProvider>
+        <div className="min-h-screen font-inter">
+          <Toaster position="top-center" />
+          <Header onBookNow={handleBookNow} showBooking={!isRestrictedUser} />
+          {isAdmin() ? (
+            <AdminDashboard />
+          ) : hasRole('driver') ? (
+            <DriverPortal />
+          ) : hasRole('client') ? (
+            <ClientPortal />
+          ) : (
+            <>
+              <Hero onBookNow={handleBookNow} />
+              <Features />
+              <Services />
+              <Fleet />
+              <Pricing onBookNow={handleBookNow} />
+              <Testimonials />
+              <FAQ />
+              <Contact />
+            </>
+          )}
+          <Footer />
+          {isBookingOpen && <BookingForm onClose={() => setIsBookingOpen(false)} />}
+        </div>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
-import BookingMap from './booking/BookingMap';
-import ServiceTypeToggle from './booking/ServiceTypeToggle';
-import RideToggle from './booking/RideToggle';
-import LocationInput from './booking/LocationInput';
-import DateTimeInputs from './booking/DateTimeInputs';
-import PassengerDetails from './booking/PassengerDetails';
-import ActionButtons from './booking/ActionButtons';
-import AddStopButton from './booking/AddStopButton';
-import TripDuration from './booking/TripDuration';
-import VehicleSelection from './booking/VehicleSelection';
-import PaymentForm from './booking/PaymentForm';
+import { Calendar, Calculator, Receipt, Clock, X, Menu } from 'lucide-react';
+import BookingMap from './BookingMap';
+import ServiceTypeToggle from './ServiceTypeToggle';
+import RideToggle from './RideToggle';
+import LocationInput from './LocationInput';
+import DateTimeInputs from './DateTimeInputs';
+import PassengerDetails from './PassengerDetails';
+import ActionButtons from './ActionButtons';
+import AddStopButton from './AddStopButton';
+import TripDuration from './TripDuration';
+import VehicleSelection from './VehicleSelection';
+import PaymentForm from './PaymentForm';
 import {
   Sheet,
   SheetContent,
@@ -252,7 +252,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
 
       {quotePrice && (
         <div className="bg-blue-50 p-6 rounded-lg">
-          <h4 className="font-semibold mb-2">Estimated Price Range</h4>
+          <h4 className="font-semibold mb-2 text-gray-900">Estimated Price Range</h4>
           <p className="text-2xl font-bold text-blue-600">
             ${quotePrice.min} - ${quotePrice.max}
           </p>
@@ -322,71 +322,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
         </div>
       </div>
     </div>
-  );
-
-  const renderMobileMenu = () => (
-    <Sheet>
-      <SheetTrigger asChild>
-        <button className="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
-          <Calendar className="h-6 w-6" />
-        </button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] bg-white">
-        <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
-        </SheetHeader>
-        <div className="mt-6 space-y-2">
-          <button
-            onClick={() => {
-              setActiveTab('book');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'book' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Calendar className="h-5 w-5" />
-            <span>Book Now</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab('quote');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'quote' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Calculator className="h-5 w-5" />
-            <span>Price Quote</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab('receipts');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'receipts' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Receipt className="h-5 w-5" />
-            <span>Quick Receipts</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab('manage');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'manage' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Clock className="h-5 w-5" />
-            <span>Manage Reservations</span>
-          </button>
-        </div>
-      </SheetContent>
-    </Sheet>
   );
 
   return (

@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import { toast } from 'sonner';
 import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
-import BookingMap from './booking/BookingMap';
-import ServiceTypeToggle from './booking/ServiceTypeToggle';
-import RideToggle from './booking/RideToggle';
-import LocationInput from './booking/LocationInput';
-import DateTimeInputs from './booking/DateTimeInputs';
-import PassengerDetails from './booking/PassengerDetails';
-import ActionButtons from './booking/ActionButtons';
-import AddStopButton from './booking/AddStopButton';
-import TripDuration from './booking/TripDuration';
-import VehicleSelection from './booking/VehicleSelection';
-import PaymentForm from './booking/PaymentForm';
 import {
   Sheet,
   SheetContent,
@@ -19,20 +7,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-interface Location {
-  lat: number;
-  lng: number;
-  address: string;
-}
+import BookTab from './booking/tabs/BookTab';
+import QuoteTab from './booking/tabs/QuoteTab';
+import ReceiptsTab from './booking/tabs/ReceiptsTab';
+import ManageTab from './booking/tabs/ManageTab';
+import { TabType, BookingStep, ServiceType, Location } from './booking/types';
 
 interface BookingFormProps {
   onClose: () => void;
 }
-
-type TabType = 'book' | 'quote' | 'receipts' | 'manage';
-type ServiceType = 'transfer' | 'hourly';
-type BookingStep = 'details' | 'vehicle' | 'payment';
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('book');
@@ -49,7 +32,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [travelers, setTravelers] = useState(0);
   const [kids, setKids] = useState(0);
   const [bags, setBags] = useState(0);
-  const [quotePrice, setQuotePrice] = useState<{ min: number; max: number } | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
 
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
@@ -85,34 +67,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     }
   };
 
-  const handleDetailsSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!pickup || !dropoff) {
-      toast.error('Please select pickup and dropoff locations');
-      return;
-    }
-
-    setBookingStep('vehicle');
-  };
-
-  const handleVehicleSelect = (vehicle: { name: string; price: number }) => {
-    setSelectedVehicle(vehicle);
-  };
-
-  const handlePaymentSubmit = () => {
-    toast.success('Booking confirmed!');
-    onClose();
-  };
-
-  const handleGetQuote = () => {
-    if (!pickup || !dropoff) {
-      toast.error('Please select pickup and dropoff locations');
-      return;
-    }
-    setQuotePrice({ min: 120, max: 150 });
-    toast.success('Quote calculated successfully');
-  };
-
   const addStop = () => {
     setStops([...stops, { lat: 0, lng: 0, address: '' }]);
   };
@@ -121,272 +75,65 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     setStops(stops.filter((_, i) => i !== index));
   };
 
-  const renderBookingForm = () => (
-    <form onSubmit={handleDetailsSubmit} className="space-y-6">
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 space-y-6">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-gray-900">Where & When</h3>
-            <ServiceTypeToggle serviceType={serviceType} onServiceTypeChange={setServiceType} />
-          </div>
-
-          {serviceType === 'hourly' && (
-            <TripDuration
-              hours={hours}
-              minutes={minutes}
-              onHoursChange={setHours}
-              onMinutesChange={setMinutes}
-            />
-          )}
-          
-          <RideToggle isRideNow={isRideNow} onToggle={setIsRideNow} />
-
-          {!isRideNow && (
-            <DateTimeInputs
-              date={date}
-              time={time}
-              onDateChange={setDate}
-              onTimeChange={setTime}
-              required={!isRideNow}
-            />
-          )}
-
-          <div className="space-y-4">
-            <LocationInput
-              label="Pickup Location"
-              onChange={(value) => handleLocationInput(value, 'pickup')}
-              value={pickup?.address}
-              required
-            />
-
-            {stops.map((stop, index) => (
-              <LocationInput
-                key={index}
-                label={`Stop #${index + 1}`}
-                onChange={(value) => handleLocationInput(value, 'stop', index)}
-                value={stop.address}
-                onRemove={() => removeStop(index)}
-                showRemoveButton
-              />
-            ))}
-
-            <LocationInput
-              label="Dropoff Location"
-              onChange={(value) => handleLocationInput(value, 'dropoff')}
-              value={dropoff?.address}
-              required
-            />
-
-            <AddStopButton onClick={addStop} />
-          </div>
-
-          <PassengerDetails
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'book':
+        return (
+          <BookTab
+            bookingStep={bookingStep}
+            serviceType={serviceType}
+            isRideNow={isRideNow}
+            pickup={pickup}
+            dropoff={dropoff}
+            stops={stops}
+            date={date}
+            time={time}
+            hours={hours}
+            minutes={minutes}
             travelers={travelers}
             kids={kids}
             bags={bags}
+            selectedVehicle={selectedVehicle}
+            onClose={onClose}
+            onServiceTypeChange={setServiceType}
+            onRideNowToggle={setIsRideNow}
+            onLocationInput={handleLocationInput}
+            onDateChange={setDate}
+            onTimeChange={setTime}
+            onHoursChange={setHours}
+            onMinutesChange={setMinutes}
             onTravelersChange={setTravelers}
             onKidsChange={setKids}
             onBagsChange={setBags}
+            onAddStop={addStop}
+            onRemoveStop={removeStop}
+            onStepChange={setBookingStep}
+            onVehicleSelect={setSelectedVehicle}
           />
-
-          <ActionButtons
-            onCancel={onClose}
-            submitLabel="Continue"
-          />
-        </div>
-
-        <div className="hidden lg:block w-[300px]">
-          <BookingMap pickup={pickup} dropoff={dropoff} stops={stops} />
-        </div>
-      </div>
-    </form>
-  );
-
-  const renderQuoteForm = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Get a Price Quote</h3>
-          
-          <DateTimeInputs
+        );
+      case 'quote':
+        return (
+          <QuoteTab
+            pickup={pickup}
+            dropoff={dropoff}
+            stops={stops}
             date={date}
             time={time}
+            onLocationInput={handleLocationInput}
             onDateChange={setDate}
             onTimeChange={setTime}
+            onAddStop={addStop}
+            onClose={onClose}
           />
-
-          <div className="space-y-4 mt-6">
-            <LocationInput
-              label="Pickup Location"
-              onChange={(value) => handleLocationInput(value, 'pickup')}
-              value={pickup?.address}
-            />
-
-            <LocationInput
-              label="Dropoff Location"
-              onChange={(value) => handleLocationInput(value, 'dropoff')}
-              value={dropoff?.address}
-            />
-
-            <AddStopButton onClick={addStop} />
-          </div>
-
-          <ActionButtons
-            onCancel={() => {
-              setPickup(undefined);
-              setDropoff(undefined);
-              setStops([]);
-              setQuotePrice(null);
-            }}
-            onSubmit={handleGetQuote}
-            submitLabel="Get Quote"
-            submitType="button"
-          />
-        </div>
-
-        <div className="hidden lg:block w-[300px]">
-          <BookingMap pickup={pickup} dropoff={dropoff} stops={stops} />
-        </div>
-      </div>
-
-      {quotePrice && (
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <h4 className="font-semibold mb-2">Estimated Price Range</h4>
-          <p className="text-2xl font-bold text-blue-600">
-            ${quotePrice.min} - ${quotePrice.max}
-          </p>
-          <p className="text-sm text-gray-600 mt-2">
-            Final price may vary based on traffic, waiting time, and other factors.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-
-  const renderReceiptsTab = () => (
-    <div className="space-y-6">
-      <div className="bg-white border rounded-lg divide-y">
-        <div className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-2">Recent Receipts</h3>
-          <p className="text-sm text-gray-600">
-            Enter your booking ID or email to find your receipt
-          </p>
-        </div>
-        <div className="p-4">
-          <div className="flex gap-4">
-            <input
-              type="text"
-              placeholder="Booking ID or Email"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
-              Search
-            </button>
-          </div>
-        </div>
-        <div className="p-4">
-          <p className="text-center text-gray-500">
-            No recent receipts found
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderManageTab = () => (
-    <div className="space-y-6">
-      <div className="bg-white border rounded-lg divide-y">
-        <div className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-2">Manage Reservations</h3>
-          <p className="text-sm text-gray-600">
-            View, modify, or cancel your upcoming reservations
-          </p>
-        </div>
-        <div className="p-4">
-          <div className="flex gap-4">
-            <input
-              type="text"
-              placeholder="Confirmation Number"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition">
-              Find Booking
-            </button>
-          </div>
-        </div>
-        <div className="p-4">
-          <p className="text-center text-gray-500">
-            No active reservations found
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderMobileMenu = () => (
-    <Sheet>
-      <SheetTrigger asChild>
-        <button className="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
-          <Calendar className="h-6 w-6" />
-        </button>
-      </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] bg-white">
-        <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
-        </SheetHeader>
-        <div className="mt-6 space-y-2">
-          <button
-            onClick={() => {
-              setActiveTab('book');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'book' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Calendar className="h-5 w-5" />
-            <span>Book Now</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab('quote');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'quote' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Calculator className="h-5 w-5" />
-            <span>Price Quote</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab('receipts');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'receipts' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Receipt className="h-5 w-5" />
-            <span>Quick Receipts</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab('manage');
-              setIsMobileMenuOpen(false);
-            }}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-              activeTab === 'manage' ? 'bg-black text-white' : 'hover:bg-gray-100'
-            }`}
-          >
-            <Clock className="h-5 w-5" />
-            <span>Manage Reservations</span>
-          </button>
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
+        );
+      case 'receipts':
+        return <ReceiptsTab />;
+      case 'manage':
+        return <ManageTab />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -450,7 +197,56 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
             </div>
 
             <div className="flex items-center space-x-4">
-              {renderMobileMenu()}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button className="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
+                    <Calendar className="h-6 w-6" />
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] bg-white">
+                  <SheetHeader>
+                    <SheetTitle>Menu</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-2">
+                    <button
+                      onClick={() => setActiveTab('book')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'book' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Calendar className="h-5 w-5" />
+                      <span>Book Now</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('quote')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'quote' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Calculator className="h-5 w-5" />
+                      <span>Price Quote</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('receipts')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'receipts' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Receipt className="h-5 w-5" />
+                      <span>Quick Receipts</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('manage')}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+                        activeTab === 'manage' ? 'bg-black text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      <Clock className="h-5 w-5" />
+                      <span>Manage Reservations</span>
+                    </button>
+                  </div>
+                </SheetContent>
+              </Sheet>
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-gray-100 rounded-full text-gray-900"
@@ -460,42 +256,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
             </div>
           </div>
 
-          {activeTab === 'book' && bookingStep === 'details' && renderBookingForm()}
-          {activeTab === 'book' && bookingStep === 'vehicle' && (
-            <VehicleSelection
-              onBack={() => setBookingStep('details')}
-              onContinue={() => setBookingStep('payment')}
-              onVehicleSelect={handleVehicleSelect}
-              bookingDetails={{
-                pickupLocation: pickup?.address || '',
-                dropoffLocation: dropoff?.address || '',
-                date,
-                time,
-                travelers,
-                kids,
-                bags
-              }}
-            />
-          )}
-          {activeTab === 'book' && bookingStep === 'payment' && selectedVehicle && (
-            <PaymentForm
-              onBack={() => setBookingStep('vehicle')}
-              onSubmit={handlePaymentSubmit}
-              bookingDetails={{
-                pickupLocation: pickup?.address || '',
-                dropoffLocation: dropoff?.address || '',
-                date,
-                time,
-                travelers,
-                kids,
-                bags,
-                vehicle: selectedVehicle
-              }}
-            />
-          )}
-          {activeTab === 'quote' && renderQuoteForm()}
-          {activeTab === 'receipts' && renderReceiptsTab()}
-          {activeTab === 'manage' && renderManageTab()}
+          {renderActiveTab()}
         </div>
       </div>
     </div>

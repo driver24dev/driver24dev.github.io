@@ -51,7 +51,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [bags, setBags] = useState(0);
   const [quotePrice, setQuotePrice] = useState<{ min: number; max: number } | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
     const dummyLocations: Record<string, { name: string; lat: number; lng: number }> = {

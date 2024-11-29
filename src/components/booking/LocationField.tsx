@@ -1,22 +1,22 @@
 import React from 'react';
-import { MapPin, Search, Edit2, X } from 'lucide-react';
+import { MapPin, Search, Edit2 } from 'lucide-react';
 
-interface LocationInputProps {
+interface LocationFieldProps {
   label: string;
   value?: string;
+  placeholder: string;
   onChange: (value: string) => void;
-  onRemove?: () => void;
+  selectedAddress?: string;
   required?: boolean;
-  showRemoveButton?: boolean;
 }
 
-const LocationInput: React.FC<LocationInputProps> = ({
+const LocationField: React.FC<LocationFieldProps> = ({
   label,
   value,
+  placeholder,
   onChange,
-  onRemove,
-  required = false,
-  showRemoveButton = false,
+  selectedAddress,
+  required
 }) => {
   return (
     <div>
@@ -29,22 +29,13 @@ const LocationInput: React.FC<LocationInputProps> = ({
         </div>
         <input
           type="text"
-          placeholder="Enter location"
-          className="w-full pl-10 pr-20 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+          placeholder={placeholder}
+          className="w-full pl-10 pr-20 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required}
-          value={value}
         />
         <div className="absolute inset-y-0 right-0 flex items-center space-x-1 pr-3">
-          {showRemoveButton && onRemove && (
-            <button 
-              type="button"
-              onClick={onRemove}
-              className="p-1 hover:bg-gray-100 rounded-full text-red-500"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
           <button type="button" className="p-1 hover:bg-gray-100 rounded-full">
             <Search className="h-4 w-4 text-gray-400" />
           </button>
@@ -53,11 +44,11 @@ const LocationInput: React.FC<LocationInputProps> = ({
           </button>
         </div>
       </div>
-      {value && (
-        <p className="mt-1 text-sm text-gray-600">{value}</p>
+      {selectedAddress && (
+        <p className="mt-1 text-sm text-gray-500">{selectedAddress}</p>
       )}
     </div>
   );
 };
 
-export default LocationInput;
+export default LocationField;

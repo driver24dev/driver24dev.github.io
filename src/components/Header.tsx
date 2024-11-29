@@ -73,6 +73,19 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
         <div className="flex justify-between items-center">
           <Logo onClick={scrollToTop} />
           
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            {menuItems.map((item, index) => (
+              <a
+                key={index}
+                href={item.href}
+                className="text-gray-200 hover:text-white transition"
+              >
+                {t(item.label)}
+              </a>
+            ))}
+          </div>
+          
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
@@ -98,14 +111,16 @@ const Header: React.FC<HeaderProps> = ({ onBookNow, showBooking }) => {
             {showBooking && (
               <button
                 onClick={onBookNow}
-                className="bg-gray-100 text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition"
+                className="bg-gray-100 text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition hidden md:block"
               >
                 {t('bookNow')}
               </button>
             )}
+            
+            {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="text-gray-200 hover:bg-gray-800 p-2 rounded-full transition-colors">
+                <button className="md:hidden text-gray-200 hover:bg-gray-800 p-2 rounded-full transition-colors">
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>

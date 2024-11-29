@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { X, Car, Calculator, Receipt, Clock } from 'lucide-react';
-import WhenAndWhereStep from './steps/WhenAndWhereStep';
-import VehicleSelectionStep from './steps/VehicleSelectionStep';
-import PaymentForm from './PaymentForm';
-import ProgressBar from './ProgressBar';
-import { BookingStep, ServiceType, TabType, Location } from './types';
+import { Calendar, Calculator, Receipt, Clock, X, Menu } from 'lucide-react';
+import BookTab from './booking/tabs/BookTab';
+import QuoteTab from './booking/tabs/QuoteTab';
+import ReceiptsTab from './booking/tabs/ReceiptsTab';
+import ManageTab from './booking/tabs/ManageTab';
+import ProgressBar from './booking/ProgressBar';
+import { TabType, BookingStep, ServiceType, Location } from './booking/types';
 
-interface BookingFormProps {
+interface RideBookingModalProps {
   onClose: () => void;
 }
 
-const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
+const RideBookingModal: React.FC<RideBookingModalProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('book');
   const [bookingStep, setBookingStep] = useState<BookingStep>('details');
   const [isRideNow, setIsRideNow] = useState(false);
@@ -68,8 +69,64 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     setStops(stops.filter((_, i) => i !== index));
   };
 
-  const handlePaymentSubmit = () => {
-    onClose();
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'book':
+        return (
+          <BookTab
+            bookingStep={bookingStep}
+            serviceType={serviceType}
+            isRideNow={isRideNow}
+            pickup={pickup}
+            dropoff={dropoff}
+            stops={stops}
+            date={date}
+            time={time}
+            hours={hours}
+            minutes={minutes}
+            travelers={travelers}
+            kids={kids}
+            bags={bags}
+            selectedVehicle={selectedVehicle}
+            onClose={onClose}
+            onServiceTypeChange={setServiceType}
+            onRideNowToggle={setIsRideNow}
+            onLocationInput={handleLocationInput}
+            onDateChange={setDate}
+            onTimeChange={setTime}
+            onHoursChange={setHours}
+            onMinutesChange={setMinutes}
+            onTravelersChange={setTravelers}
+            onKidsChange={setKids}
+            onBagsChange={setBags}
+            onAddStop={addStop}
+            onRemoveStop={removeStop}
+            onStepChange={setBookingStep}
+            onVehicleSelect={setSelectedVehicle}
+          />
+        );
+      case 'quote':
+        return (
+          <QuoteTab
+            pickup={pickup}
+            dropoff={dropoff}
+            stops={stops}
+            date={date}
+            time={time}
+            onLocationInput={handleLocationInput}
+            onDateChange={setDate}
+            onTimeChange={setTime}
+            onAddStop={addStop}
+            onClose={onClose}
+          />
+        );
+      case 'receipts':
+        return <ReceiptsTab />;
+      case 'manage':
+        return <ManageTab />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -77,27 +134,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            {/* Mobile Navigation */}
-            <div className="lg:hidden flex items-center space-x-4">
-              <button
-                onClick={() => setActiveTab('book')}
-                className={`px-3 py-1 rounded-lg text-sm ${
-                  activeTab === 'book' ? 'bg-black text-white' : 'text-gray-600'
-                }`}
-              >
-                Book
-              </button>
-              <button
-                onClick={() => setActiveTab('quote')}
-                className={`px-3 py-1 rounded-lg text-sm ${
-                  activeTab === 'quote' ? 'bg-black text-white' : 'text-gray-600'
-                }`}
-              >
-                Quote
-              </button>
-            </div>
-
-            {/* Desktop Navigation */}
             <div className="hidden lg:flex space-x-4">
               <button
                 onClick={() => setActiveTab('book')}
@@ -107,7 +143,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
                     : 'text-gray-900 hover:bg-gray-100'
                 }`}
               >
-                <Car className="h-5 w-5 mr-2" />
+                <Calendar className="h-5 w-5 mr-2" />
                 Book Now
               </button>
               <button
@@ -145,6 +181,20 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
               </button>
             </div>
 
+            <div className="lg:hidden relative flex items-center">
+              <Menu className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 pointer-events-none z-10" />
+              <select
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value as TabType)}
+                className="pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none text-gray-900 font-medium"
+              >
+                <option value="book" className="text-gray-900 font-medium">Book Now</option>
+                <option value="quote" className="text-gray-900 font-medium">Price Quote</option>
+                <option value="receipts" className="text-gray-900 font-medium">Quick Receipts</option>
+                <option value="manage" className="text-gray-900 font-medium">Manage Reservations</option>
+              </select>
+            </div>
+
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full text-gray-900"
@@ -158,74 +208,11 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
             <ProgressBar currentStep={bookingStep} />
           )}
 
-          {/* Content */}
-          {activeTab === 'book' && bookingStep === 'details' && (
-            <WhenAndWhereStep
-              serviceType={serviceType}
-              isRideNow={isRideNow}
-              pickup={pickup}
-              dropoff={dropoff}
-              stops={stops}
-              date={date}
-              time={time}
-              hours={hours}
-              minutes={minutes}
-              travelers={travelers}
-              kids={kids}
-              bags={bags}
-              onServiceTypeChange={setServiceType}
-              onRideNowToggle={setIsRideNow}
-              onLocationInput={handleLocationInput}
-              onDateChange={setDate}
-              onTimeChange={setTime}
-              onHoursChange={setHours}
-              onMinutesChange={setMinutes}
-              onTravelersChange={setTravelers}
-              onKidsChange={setKids}
-              onBagsChange={setBags}
-              onAddStop={addStop}
-              onRemoveStop={removeStop}
-              onClose={onClose}
-              onContinue={() => setBookingStep('vehicle')}
-            />
-          )}
-
-          {activeTab === 'book' && bookingStep === 'vehicle' && (
-            <VehicleSelectionStep
-              pickup={pickup}
-              dropoff={dropoff}
-              stops={stops}
-              date={date}
-              time={time}
-              travelers={travelers}
-              kids={kids}
-              bags={bags}
-              onBack={() => setBookingStep('details')}
-              onContinue={() => setBookingStep('payment')}
-              onVehicleSelect={setSelectedVehicle}
-            />
-          )}
-
-          {activeTab === 'book' && bookingStep === 'payment' && selectedVehicle && (
-            <PaymentForm
-              onBack={() => setBookingStep('vehicle')}
-              onSubmit={handlePaymentSubmit}
-              bookingDetails={{
-                pickupLocation: pickup?.address || '',
-                dropoffLocation: dropoff?.address || '',
-                date,
-                time,
-                travelers,
-                kids,
-                bags,
-                vehicle: selectedVehicle
-              }}
-            />
-          )}
+          {renderActiveTab()}
         </div>
       </div>
     </div>
   );
 };
 
-export default BookingForm;
+export default RideBookingModal;

@@ -1,0 +1,133 @@
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import BookingDetails from './steps/BookingDetails';
+import VehicleSelection from './steps/VehicleSelection';
+import PaymentDetails from './steps/PaymentDetails';
+import ProgressBar from '../ProgressBar';
+import { BookingStep, BookingFormData } from '../types';
+
+interface BookingFormProps {
+  onClose: () => void;
+}
+
+const initialFormData: BookingFormData = {
+  serviceType: 'transfer',
+  pickupLocation: '',
+  dropoffLocation: '',
+  stops: [],
+  date: '',
+  time: '',
+  hours: 2,
+  minutes: 0,
+  travelers: 1,
+  kids: 0,
+  bags: 1,
+  name: '',
+  email: '',
+  phone: '',
+  specialRequests: ''
+};
+
+const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
+  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+  const [formData, setFormData] = useState<BookingFormData>(initialFormData);
+  const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (currentStep === 'details') {
+      setCurrentStep('vehicle');
+      return;
+    }
+
+    if (currentStep === 'vehicle') {
+      if (!selectedVehicle) {
+        toast.error('Please select a vehicle');
+        return;
+      }
+      setCurrentStep('payment');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      toast.success('Booking submitted successfully!');
+      onClose();
+    } catch (error) {
+      console.error('Booking error:', error);
+      toast.error('Failed to submit booking');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 'details':
+        return (
+          <BookingDetails
+            formData={formData}
+            onFormDataChange={setFormData}
+          />
+        );
+      case 'vehicle':
+        return (
+          <VehicleSelection
+            formData={formData}
+            selectedVehicle={selectedVehicle}
+            onVehicleSelect={setSelectedVehicle}
+            onBack={() => setCurrentStep('details')}
+          />
+        );
+      case 'payment':
+        return (
+          <PaymentDetails
+            formData={formData}
+            selectedVehicle={selectedVehicle}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-8">
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          <ProgressBar currentStep={currentStep} />
+          <div className="mt-8">
+            {renderStep()}
+          </div>
+          
+          <div className="flex justify-between pt-8 mt-8 border-t border-gray-100">
+            {currentStep !== 'details' && (
+              <button
+                type="button"
+                onClick={() => setCurrentStep(prev => 
+                  prev === 'payment' ? 'vehicle' : 'details'
+                )}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                Back
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
+            >
+              {loading ? 'Processing...' : currentStep === 'payment' ? 'Complete Booking' : 'Continue'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default BookingForm;

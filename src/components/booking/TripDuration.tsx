@@ -24,7 +24,7 @@ const TripDuration: React.FC<TripDurationProps> = ({
           <button
             type="button"
             onClick={() => onHoursChange(Math.max(0, hours - 1))}
-            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300"
+            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300 text-gray-700"
           >
             <Minus className="h-4 w-4" />
           </button>
@@ -34,12 +34,12 @@ const TripDuration: React.FC<TripDurationProps> = ({
             max="24"
             value={hours}
             onChange={(e) => onHoursChange(Math.min(24, Math.max(0, parseInt(e.target.value) || 0)))}
-            className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center"
+            className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-gray-900"
           />
           <button
             type="button"
             onClick={() => onHoursChange(Math.min(24, hours + 1))}
-            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300"
+            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300 text-gray-700"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -54,7 +54,7 @@ const TripDuration: React.FC<TripDurationProps> = ({
           <button
             type="button"
             onClick={() => onMinutesChange(Math.max(0, minutes - 10))}
-            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300"
+            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300 text-gray-700"
           >
             <Minus className="h-4 w-4" />
           </button>
@@ -69,12 +69,12 @@ const TripDuration: React.FC<TripDurationProps> = ({
               const roundedValue = Math.round(value / 10) * 10;
               onMinutesChange(Math.min(50, Math.max(0, roundedValue)));
             }}
-            className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center"
+            className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-gray-900"
           />
           <button
             type="button"
             onClick={() => onMinutesChange(Math.min(50, minutes + 10))}
-            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300"
+            className="p-2 rounded-lg hover:bg-gray-100 border border-gray-300 text-gray-700"
           >
             <Plus className="h-4 w-4" />
           </button>

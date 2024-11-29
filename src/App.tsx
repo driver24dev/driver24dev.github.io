@@ -10,7 +10,7 @@ import Pricing from './components/Pricing';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import BookingForm from './components/BookingForm';
+import RideBookingModal from './components/RideBookingModal';
 import AdminDashboard from './components/admin/AdminDashboard';
 import DriverPortal from './components/driver/DriverPortal';
 import ClientPortal from './components/client/ClientPortal';
@@ -63,7 +63,7 @@ function App() {
             </>
           )}
           <Footer />
-          {isBookingOpen && <BookingForm onClose={() => setIsBookingOpen(false)} />}
+          {isBookingOpen && <RideBookingModal onClose={() => setIsBookingOpen(false)} />}
         </div>
       </LanguageProvider>
     </ThemeProvider>

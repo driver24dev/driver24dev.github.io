@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info, ChevronDown, ChevronUp } from 'lucide-react';
-import { PaymentFormProps, PassengerInfo, PaymentDetails } from './types';
-import PassengerInfoSection from './PaymentForm/PassengerInfoSection';
-import PaymentInfoSection from './PaymentForm/PaymentInfoSection';
-import BookingSummary from './PaymentForm/BookingSummary';
-import SpecialInstructions from './PaymentForm/SpecialInstructions';
-import TermsCheckbox from './PaymentForm/TermsCheckbox';
-import ActionButtons from './PaymentForm/ActionButtons';
-import MobileBookingSummary from './PaymentForm/MobileBookingSummary';
+import { PaymentFormProps, PassengerInfo, PaymentDetails } from '../types';
+import PassengerInfoSection from './PassengerInfoSection';
+import PaymentInfoSection from './PaymentInfoSection';
+import BookingSummary from './BookingSummary';
 
 const PaymentForm: React.FC<PaymentFormProps> = ({
   onBack,
@@ -79,12 +75,20 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       </div>
 
       {isMobile && showMobileDetails && (
-        <MobileBookingSummary
-          bookingDetails={bookingDetails}
-          agreeToTerms={agreeToTerms}
-          onAgreeToTermsChange={setAgreeToTerms}
-          onBack={onBack}
-        />
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="overflow-hidden mb-6"
+        >
+          <BookingSummary
+            bookingDetails={bookingDetails}
+            agreeToTerms={agreeToTerms}
+            onAgreeToTermsChange={setAgreeToTerms}
+            onBack={onBack}
+          />
+        </motion.div>
       )}
 
       <div className="flex gap-6">
@@ -99,20 +103,48 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             onPaymentDetailsChange={setPaymentDetails}
           />
 
-          <SpecialInstructions
-            value={specialInstructions}
-            onChange={setSpecialInstructions}
-          />
+          <div className="bg-white rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Special Instructions</h3>
+            <textarea
+              value={specialInstructions}
+              onChange={(e) => setSpecialInstructions(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows={4}
+              placeholder="Any special requests or instructions for your ride?"
+            />
+          </div>
 
-          <TermsCheckbox
-            checked={agreeToTerms}
-            onChange={setAgreeToTerms}
-          />
+          <div className="bg-white rounded-lg p-6">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                checked={agreeToTerms}
+                onChange={(e) => setAgreeToTerms(e.target.checked)}
+              />
+              <span className="ml-2 text-sm text-gray-900">
+                I agree to the{' '}
+                <a href="#" className="text-blue-600 hover:underline">terms and conditions</a>
+              </span>
+            </label>
+          </div>
 
-          <ActionButtons
-            onBack={onBack}
-            disabled={!agreeToTerms}
-          />
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex-1 mr-2 px-6 py-2 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-100 transition"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              disabled={!agreeToTerms}
+              className="flex-1 ml-2 px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Book Now
+            </button>
+          </div>
         </div>
 
         {!isMobile && (

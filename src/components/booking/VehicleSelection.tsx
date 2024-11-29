@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Briefcase, LayoutGrid, List, Info } from 'lucide-react';
+import { Users, Briefcase, LayoutGrid, List, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 interface VehicleSelectionProps {
   onBack: () => void;
@@ -73,18 +66,6 @@ const vehicles: Vehicle[] = [
     },
     basePrice: 199,
     pricePerMile: 3.5
-  },
-  {
-    id: 'minibus',
-    name: 'Mini Bus',
-    image: '/images/fleet-sprinter.jpg', // Placeholder image
-    description: 'Perfect for medium-sized groups',
-    capacity: {
-      passengers: 15,
-      luggage: 15
-    },
-    basePrice: 249,
-    pricePerMile: 4
   }
 ];
 
@@ -97,6 +78,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isMobile, setIsMobile] = useState(false);
+  const [showMobileDetails, setShowMobileDetails] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -129,8 +111,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
   };
 
   const calculateEstimatedPrice = (vehicle: Vehicle) => {
-    // This is a simplified calculation - you would want to implement actual distance-based pricing
-    const estimatedMiles = 20; // Example: 20 miles trip
+    const estimatedMiles = 20;
     return vehicle.basePrice + (vehicle.pricePerMile * estimatedMiles);
   };
 
@@ -147,7 +128,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
 
   const renderTripDetails = () => (
     <div className="bg-gray-50 p-6 rounded-lg space-y-4">
-      <h3 className="text-lg font-semibold mb-4">Trip Details</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Trip Details</h3>
       
       <div>
         <p className="text-sm font-medium text-gray-600">Pickup</p>
@@ -214,25 +195,25 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
           <img
             src={vehicle.image}
             alt={vehicle.name}
-            className="w-full h-48 object-cover"
+            className="w-full h-48 object-cover text-gray-900"
           />
         </div>
         <div className="p-4">
-          <h3 className="text-lg font-semibold">{vehicle.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{vehicle.name}</h3>
           <p className="text-gray-600 text-sm mb-3">{vehicle.description}</p>
           
           <div className="flex items-center space-x-4 mb-3">
             <div className="flex items-center">
               <Users className="h-4 w-4 text-gray-400 mr-1" />
-              <span className="text-sm">{vehicle.capacity.passengers} passengers</span>
+              <span className="text-sm text-gray-900">{vehicle.capacity.passengers}</span>
             </div>
             <div className="flex items-center">
               <Briefcase className="h-4 w-4 text-gray-400 mr-1" />
-              <span className="text-sm">{vehicle.capacity.luggage} bags</span>
+              <span className="text-sm text-gray-900">{vehicle.capacity.luggage}</span>
             </div>
           </div>
           
-          <div className="text-xl font-bold">
+          <div className="text-xl font-bold text-gray-900">
             ${estimatedPrice.toFixed(2)}
           </div>
         </div>
@@ -257,15 +238,15 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
           <img
             src={vehicle.image}
             alt={vehicle.name}
-            className="w-48 h-32 object-cover rounded-lg"
+            className="w-48 h-32 object-cover rounded-lg text-gray-900"
           />
           <div className="ml-6 flex-1">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-lg font-semibold">{vehicle.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{vehicle.name}</h3>
                 <p className="text-gray-600 text-sm">{vehicle.description}</p>
               </div>
-              <div className="text-xl font-bold">
+              <div className="text-xl font-bold text-gray-900">
                 ${estimatedPrice.toFixed(2)}
               </div>
             </div>
@@ -273,11 +254,11 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
             <div className="flex items-center space-x-4 mt-4">
               <div className="flex items-center">
                 <Users className="h-4 w-4 text-gray-400 mr-1" />
-                <span className="text-sm">{vehicle.capacity.passengers} passengers</span>
+                <span className="text-sm text-gray-900">{vehicle.capacity.passengers}</span>
               </div>
               <div className="flex items-center">
                 <Briefcase className="h-4 w-4 text-gray-400 mr-1" />
-                <span className="text-sm">{vehicle.capacity.luggage} bags</span>
+                <span className="text-sm text-gray-900">{vehicle.capacity.luggage}</span>
               </div>
             </div>
           </div>
@@ -289,29 +270,25 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Select Vehicle</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Select Vehicle</h2>
         <div className="flex items-center space-x-2">
           {isMobile ? (
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="p-2 rounded-md hover:bg-gray-100">
-                  <Info className="h-5 w-5" />
-                </button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Trip Details</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6">
-                  {renderTripDetails()}
-                </div>
-              </SheetContent>
-            </Sheet>
+            <button
+              onClick={() => setShowMobileDetails(!showMobileDetails)}
+              className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 text-gray-700"
+            >
+              <Info className="h-5 w-5" />
+              {showMobileDetails ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </button>
           ) : (
             <div className="bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-md ${
+                className={`p-2 rounded-md text-gray-700 ${
                   viewMode === 'grid' ? 'bg-white shadow' : ''
                 }`}
               >
@@ -319,7 +296,7 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-md ${
+                className={`p-2 rounded-md text-gray-700 ${
                   viewMode === 'list' ? 'bg-white shadow' : ''
                 }`}
               >
@@ -330,8 +307,20 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
         </div>
       </div>
 
+      {isMobile && showMobileDetails && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="overflow-hidden"
+        >
+          {renderTripDetails()}
+        </motion.div>
+      )}
+
       <div className="flex gap-6">
-        <div className={`${isMobile ? 'w-full pr-0' : viewMode === 'grid' ? 'flex-1' : 'w-2/3'}`}>
+        <div className={`${isMobile ? 'w-full' : viewMode === 'grid' ? 'flex-1' : 'w-2/3'}`}>
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {vehicles.map(renderVehicleCard)}
@@ -349,15 +338,13 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
         )}
       </div>
 
-      {selectedVehicle && (
+      {selectedVehicle && isMobile && (
         <div className="bg-gray-50 p-4 rounded-lg mb-4">
           <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-600">Estimated Price</p>
-              <p className="text-2xl font-bold">
-                ${calculateEstimatedPrice(vehicles.find(v => v.id === selectedVehicle)!).toFixed(2)}
-              </p>
-            </div>
+            <p className="text-sm font-medium text-gray-600">Estimated Price</p>
+            <p className="text-2xl font-bold text-gray-900">
+              ${calculateEstimatedPrice(vehicles.find(v => v.id === selectedVehicle)!).toFixed(2)}
+            </p>
           </div>
         </div>
       )}

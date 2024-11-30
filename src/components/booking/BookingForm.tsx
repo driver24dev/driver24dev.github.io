@@ -10,20 +10,20 @@ interface BookingFormProps {
 }
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
-  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
-  const [serviceType, setServiceType] = useState<ServiceType>('transfer');
-  const [isRideNow, setIsRideNow] = useState(false);
-  const [pickup, setPickup] = useState<Location>();
-  const [dropoff, setDropoff] = useState<Location>();
-  const [stops, setStops] = useState<Location[]>([]);
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [hours, setHours] = useState(2);
-  const [minutes, setMinutes] = useState(0);
-  const [travelers, setTravelers] = useState(1);
-  const [kids, setKids] = useState(0);
-  const [bags, setBags] = useState(1);
-  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
+ const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+ const [serviceType, setServiceType] = useState<ServiceType>('transfer');
+ const [isRideNow, setIsRideNow] = useState(false);
+ const [pickup, setPickup] = useState<Location>();
+ const [dropoff, setDropoff] = useState<Location>();
+ const [stops, setStops] = useState<Location[]>([]);
+ const [date, setDate] = useState('');
+ const [time, setTime] = useState('');
+ const [hours, setHours] = useState(2);
+ const [minutes, setMinutes] = useState(0);
+ const [travelers, setTravelers] = useState(1);
+ const [kids, setKids] = useState(0);
+ const [bags, setBags] = useState(1);
+ const [selectedVehicle, _setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
 
   const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
     // Simulate geocoding with dummy data

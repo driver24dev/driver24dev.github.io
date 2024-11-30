@@ -1,4 +1,8 @@
-{/* Previous imports remain the same */}
+import React, { useState } from 'react';
+import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
+
+
+
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   {/* Previous state and handlers remain the same */}

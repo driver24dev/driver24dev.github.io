@@ -4,7 +4,7 @@ import PaymentMethodSelect from '../components/PaymentMethodSelect';
 import { PaymentDetailsProps, PaymentMethod, PaymentDetails as PaymentDetailsType } from '../types/booking';
 
 const PaymentDetails: React.FC<PaymentDetailsProps> = ({
-  bookingDetails,
+  bookingDetails: _bookingDetails,
   onBack,
   onSubmit
 }) => {

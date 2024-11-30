@@ -66,12 +66,12 @@ const VehicleSelection = ({
   onBack,
   onContinue,
   onVehicleSelect,
-  bookingDetails
+  bookingDetails: _bookingDetails
 }: VehicleSelectionProps) => {
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showMobileDetails, setShowMobileDetails] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isMobile, _setIsMobile] = useState(window.innerWidth < 1024);
 
   const handleVehicleSelect = (vehicleId: string) => {
     setSelectedVehicle(vehicleId);

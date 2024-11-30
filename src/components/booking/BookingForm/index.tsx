@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
-import { Calendar, Calculator, Receipt, Clock, X, Menu } from 'lucide-react';
 import BookTab from '../tabs/BookTab';
 import QuoteTab from '../tabs/QuoteTab';
 import ReceiptsTab from '../tabs/ReceiptsTab';
 import ManageTab from '../tabs/ManageTab';
-import { TabType, BookingStep, ServiceType, Location } from '../types';
+import TabButton from './components/TabButton';
+import MobileTabSelect from './components/MobileTabSelect';
+import { TabType, BookingStep, Location } from '../types';
 import { BookingFormProps, BookingFormData } from './types';
 import { findLocationMatch } from './utils';
+import { TABS } from './constants';
 
 const initialFormData: BookingFormData = {
   serviceType: 'transfer',
@@ -112,41 +115,21 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <div className="hidden lg:flex space-x-4">
-              {[
-                { id: 'book', icon: <Calendar className="h-5 w-5 mr-2" />, label: 'Book Now' },
-                { id: 'quote', icon: <Calculator className="h-5 w-5 mr-2" />, label: 'Price Quote' },
-                { id: 'receipts', icon: <Receipt className="h-5 w-5 mr-2" />, label: 'Quick Receipts' },
-                { id: 'manage', icon: <Clock className="h-5 w-5 mr-2" />, label: 'Manage Reservations' }
-              ].map(tab => (
-                <button
+              {TABS.map(tab => (
+                <TabButton
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as TabType)}
-                  className={`flex items-center px-4 py-2 rounded-lg ${
-                    activeTab === tab.id
-                      ? 'bg-black text-white'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  {tab.icon}
-                  {tab.label}
-                </button>
+                  tab={tab}
+                  isActive={activeTab === tab.id}
+                  onClick={setActiveTab}
+                />
               ))}
             </div>
 
             <div className="lg:hidden flex items-center space-x-4">
-              <div className="relative flex items-center">
-                <Menu className="absolute left-3 h-5 w-5 text-gray-500 pointer-events-none" />
-                <select
-                  value={activeTab}
-                  onChange={(e) => setActiveTab(e.target.value as TabType)}
-                  className="bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="book">Book Now</option>
-                  <option value="quote">Price Quote</option>
-                  <option value="receipts">Quick Receipts</option>
-                  <option value="manage">Manage Reservations</option>
-                </select>
-              </div>
+              <MobileTabSelect
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
             </div>
 
             <button

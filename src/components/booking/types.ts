@@ -8,8 +8,14 @@ export interface Location {
   address: string;
 }
 
-export interface Tab {
+export interface BookingFormProps {
+  onClose: () => void;
+}
+
+export interface TabButtonProps {
   id: TabType;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   label: string;
+  isActive: boolean;
+  onClick: (tab: TabType) => void;
 }

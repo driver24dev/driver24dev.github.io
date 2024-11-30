@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info, ChevronDown, ChevronUp } from 'lucide-react';
-import { PaymentFormProps, PassengerInfo, PaymentDetails } from './types';
-import { calculatePrices } from './utils';
+import { PaymentFormProps } from './types';
 import PassengerInfoSection from './PassengerInfoSection';
 import PaymentInfoSection from './PaymentInfoSection';
 import BookingSummary from './BookingSummary';
@@ -12,7 +11,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   onSubmit,
   bookingDetails
 }) => {
-  const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
+  const [passengerInfo, setPassengerInfo] = useState({
     firstName: '',
     lastName: '',
     phone: '',
@@ -23,8 +22,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     nameSign: ''
   });
 
-  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
-    method: 'credit_card',
+  const [paymentDetails, setPaymentDetails] = useState({
+    method: 'credit_card' as const,
     cardNumber: '',
     cardHolder: '',
     expiryDate: '',
@@ -47,7 +46,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreeToTerms) {
       return;
@@ -55,10 +54,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     onSubmit();
   };
 
-  const { totalPrice } = calculatePrices(bookingDetails.vehicle.price);
+  const totalPrice = bookingDetails.vehicle?.price ?? 0;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleFormSubmit} className="space-y-6">
       {isMobile && (
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">

@@ -1,4 +1,3 @@
-import React from 'react';
 import { CreditCard } from 'lucide-react';
 import { PaymentDetails, PaymentMethod } from './types';
 import PaymentMethodSelect from './PaymentMethodSelect';
@@ -12,6 +11,10 @@ const PaymentInfoSection = ({
   paymentDetails,
   onPaymentDetailsChange
 }: PaymentInfoSectionProps) => {
+  const handleMethodChange = (method: PaymentMethod) => {
+    onPaymentDetailsChange({ ...paymentDetails, method });
+  };
+
   const renderPaymentFields = () => {
     switch (paymentDetails.method) {
       case 'credit_card':
@@ -83,10 +86,6 @@ const PaymentInfoSection = ({
       default:
         return null;
     }
-  };
-
-  const handleMethodChange = (method: PaymentMethod) => {
-    onPaymentDetailsChange({ ...paymentDetails, method });
   };
 
   return (

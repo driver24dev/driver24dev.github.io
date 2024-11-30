@@ -1,4 +1,3 @@
-import React from 'react';
 import { CreditCard, Wallet, Bitcoin } from 'lucide-react';
 import { PaymentMethod } from './types';
 

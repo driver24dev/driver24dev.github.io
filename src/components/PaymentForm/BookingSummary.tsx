@@ -1,19 +1,16 @@
-import React from 'react';
-import { BookingDetails } from './types';
 import { formatDate, formatTime, calculatePrices } from './utils';
+import { BookingDetails } from './types';
 
 export interface BookingSummaryProps {
   bookingDetails: BookingDetails;
   agreeToTerms: boolean;
   onAgreeToTermsChange: (agreed: boolean) => void;
-  onBack: () => void;
 }
 
 const BookingSummary = ({
   bookingDetails,
   agreeToTerms,
-  onAgreeToTermsChange,
-  onBack
+  onAgreeToTermsChange
 }: BookingSummaryProps) => {
   const { serviceFee, totalPrice } = calculatePrices(bookingDetails.vehicle.price);
 

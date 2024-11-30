@@ -1,128 +1,134 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import WhenAndWhereStep from './steps/WhenAndWhereStep';
 import VehicleSelectionStep from './steps/VehicleSelectionStep';
 import PaymentStep from './steps/PaymentStep';
-import ProgressBar from '../ProgressBar';
-import { BookingStep, ServiceType, Location } from '../types';
+import ProgressBar from '../../ProgressBar';
+import { BookingStep, BookingFormData } from '../../types';
 
 interface BookingFormProps {
   onClose: () => void;
 }
 
+const initialFormData: BookingFormData = {
+  serviceType: 'transfer',
+  pickupLocation: '',
+  dropoffLocation: '',
+  stops: [],
+  date: '',
+  time: '',
+  hours: 2,
+  minutes: 0,
+  travelers: 1,
+  kids: 0,
+  bags: 1,
+  name: '',
+  email: '',
+  phone: '',
+  specialRequests: ''
+};
+
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
-  const [bookingStep, setBookingStep] = useState<BookingStep>('details');
-  const [serviceType, setServiceType] = useState<ServiceType>('transfer');
-  const [isRideNow, setIsRideNow] = useState(false);
-  const [pickup, setPickup] = useState<Location>();
-  const [dropoff, setDropoff] = useState<Location>();
-  const [stops, setStops] = useState<Location[]>([]);
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [travelers, setTravelers] = useState(0);
-  const [kids, setKids] = useState(0);
-  const [bags, setBags] = useState(0);
+  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+  const [formData, setFormData] = useState<BookingFormData>(initialFormData);
   const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
-    // Location handling logic
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (currentStep === 'details') {
+      setCurrentStep('vehicle');
+      return;
+    }
+
+    if (currentStep === 'vehicle') {
+      if (!selectedVehicle) {
+        toast.error('Please select a vehicle');
+        return;
+      }
+      setCurrentStep('payment');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      toast.success('Booking submitted successfully!');
+      onClose();
+    } catch (error) {
+      console.error('Booking error:', error);
+      toast.error('Failed to submit booking');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const addStop = () => {
-    setStops([...stops, { lat: 0, lng: 0, address: '' }]);
+  const handleBack = () => {
+    setCurrentStep(prev => prev === 'payment' ? 'vehicle' : 'details');
   };
 
-  const removeStop = (index: number) => {
-    setStops(stops.filter((_, i) => i !== index));
+  const renderStep = () => {
+    switch (currentStep) {
+      case 'details':
+        return (
+          <WhenAndWhereStep
+            formData={formData}
+            onFormDataChange={setFormData}
+          />
+        );
+      case 'vehicle':
+        return (
+          <VehicleSelectionStep
+            formData={formData}
+            selectedVehicle={selectedVehicle}
+            onVehicleSelect={setSelectedVehicle}
+            onBack={handleBack}
+          />
+        );
+      case 'payment':
+        return (
+          <PaymentStep
+            formData={formData}
+            selectedVehicle={selectedVehicle}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
-  const handlePaymentSubmit = () => {
-    toast.success('Booking confirmed!');
-    onClose();
-  };
-
-  if (bookingStep === 'details') {
-    return (
-      <>
-        <ProgressBar currentStep={bookingStep} />
-        <WhenAndWhereStep
-          serviceType={serviceType}
-          isRideNow={isRideNow}
-          pickup={pickup}
-          dropoff={dropoff}
-          stops={stops}
-          date={date}
-          time={time}
-          hours={hours}
-          minutes={minutes}
-          travelers={travelers}
-          kids={kids}
-          bags={bags}
-          onServiceTypeChange={setServiceType}
-          onRideNowToggle={setIsRideNow}
-          onLocationInput={handleLocationInput}
-          onDateChange={setDate}
-          onTimeChange={setTime}
-          onHoursChange={setHours}
-          onMinutesChange={setMinutes}
-          onTravelersChange={setTravelers}
-          onKidsChange={setKids}
-          onBagsChange={setBags}
-          onAddStop={addStop}
-          onRemoveStop={removeStop}
-          onClose={onClose}
-          onContinue={() => setBookingStep('vehicle')}
-        />
-      </>
-    );
-  }
-
-  if (bookingStep === 'vehicle') {
-    return (
-      <>
-        <ProgressBar currentStep={bookingStep} />
-        <VehicleSelectionStep
-          pickup={pickup}
-          dropoff={dropoff}
-          stops={stops}
-          date={date}
-          time={time}
-          travelers={travelers}
-          kids={kids}
-          bags={bags}
-          onBack={() => setBookingStep('details')}
-          onContinue={() => setBookingStep('payment')}
-          onVehicleSelect={setSelectedVehicle}
-        />
-      </>
-    );
-  }
-
-  if (bookingStep === 'payment' && selectedVehicle) {
-    return (
-      <>
-        <ProgressBar currentStep={bookingStep} />
-        <PaymentStep
-          onBack={() => setBookingStep('vehicle')}
-          onSubmit={handlePaymentSubmit}
-          bookingDetails={{
-            pickupLocation: pickup?.address || '',
-            dropoffLocation: dropoff?.address || '',
-            date,
-            time,
-            travelers,
-            kids,
-            bags,
-            vehicle: selectedVehicle
-          }}
-        />
-      </>
-    );
-  }
-
-  return null;
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-8">
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          <ProgressBar currentStep={currentStep} />
+          <div className="mt-8">
+            {renderStep()}
+          </div>
+          
+          <div className="flex justify-between pt-8 mt-8 border-t border-gray-100">
+            {currentStep !== 'details' && (
+              <button
+                type="button"
+                onClick={handleBack}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                Back
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ml-auto"
+            >
+              {loading ? 'Processing...' : currentStep === 'payment' ? 'Complete Booking' : 'Continue'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default BookingForm;

@@ -10,10 +10,7 @@ interface BookingSummaryProps {
 }
 
 const BookingSummary: React.FC<BookingSummaryProps> = ({
-  bookingDetails,
-  agreeToTerms,
-  onAgreeToTermsChange,
-  onBack
+  bookingDetails
 }) => {
   const { serviceFee, totalPrice } = calculatePrices(bookingDetails.vehicle.price);
 

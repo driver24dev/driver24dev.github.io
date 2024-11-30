@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookingFormProps } from './types';
+import { BookingFormProps } from './booking/types';
 import { Calendar, Calculator, Receipt, Clock, Menu, X } from 'lucide-react';
 
 type TabType = 'book' | 'quote' | 'receipts' | 'manage';

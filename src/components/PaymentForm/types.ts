@@ -29,3 +29,9 @@ export interface BookingDetails {
     price: number;
   };
 }
+
+export interface PaymentFormProps {
+  onBack: () => void;
+  onSubmit: () => void;
+  bookingDetails: BookingDetails;
+}

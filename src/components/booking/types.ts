@@ -27,6 +27,20 @@ export interface BookingFormData {
   specialRequests: string;
 }
 
+export interface BookingDetails {
+  pickupLocation: string;
+  dropoffLocation: string;
+  date: string;
+  time: string;
+  travelers: number;
+  kids: number;
+  bags: number;
+  vehicle: {
+    name: string;
+    price: number;
+  };
+}
+
 export interface WhenAndWhereStepProps {
   formData: BookingFormData;
   onFormDataChange: (data: BookingFormData) => void;

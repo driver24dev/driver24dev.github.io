@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { PaymentFormProps, PassengerInfo, PaymentDetails } from './types';
@@ -6,20 +6,16 @@ import PassengerInfoSection from './PassengerInfoSection';
 import PaymentInfoSection from './PaymentInfoSection';
 import BookingSummary from './BookingSummary';
 
-const PaymentForm: React.FC<PaymentFormProps> = ({
+const PaymentForm = ({
   onBack,
   onSubmit,
   bookingDetails
-}) => {
+}: PaymentFormProps) => {
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: '',
     lastName: '',
     phone: '',
-    email: '',
-    contactName: '',
-    contactPhone: '',
-    contactEmail: '',
-    nameSign: ''
+    email: ''
   });
 
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
@@ -85,7 +81,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             bookingDetails={bookingDetails}
             agreeToTerms={agreeToTerms}
             onAgreeToTermsChange={setAgreeToTerms}
-            onBack={onBack}
           />
         </motion.div>
       )}
@@ -125,7 +120,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 bookingDetails={bookingDetails}
                 agreeToTerms={agreeToTerms}
                 onAgreeToTermsChange={setAgreeToTerms}
-                onBack={onBack}
               />
             </div>
           </motion.div>

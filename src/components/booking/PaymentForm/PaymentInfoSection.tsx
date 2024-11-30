@@ -1,7 +1,7 @@
 import React from 'react';
 import { CreditCard } from 'lucide-react';
-import { PaymentDetails } from '../types';
-import PaymentMethodSelect from './PaymentMethodSelect';
+import { PaymentDetails } from './types';
+import { PaymentMethodSelect } from './PaymentMethodSelect';
 
 interface PaymentInfoSectionProps {
   paymentDetails: PaymentDetails;

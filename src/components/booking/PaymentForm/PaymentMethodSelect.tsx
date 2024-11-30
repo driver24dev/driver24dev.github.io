@@ -1,13 +1,13 @@
 import React from 'react';
 import { CreditCard, Wallet, Bitcoin } from 'lucide-react';
-import { PaymentMethod } from '../types';
+import { PaymentMethod } from './types';
 
 interface PaymentMethodSelectProps {
   value: PaymentMethod;
   onChange: (method: PaymentMethod) => void;
 }
 
-const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
+export const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
   value,
   onChange
 }) => {
@@ -67,5 +67,3 @@ const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
     </div>
   );
 };
-
-export default PaymentMethodSelect;

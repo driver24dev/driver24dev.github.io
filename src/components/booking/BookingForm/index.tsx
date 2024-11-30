@@ -36,7 +36,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const handleSubmit = async () => {
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       toast.success('Booking submitted successfully!');
       onClose();
     } catch (error) {
@@ -46,7 +46,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   };
 
   const handleBack = () => {
-    setCurrentStep(prev => prev === 'payment' ? 'vehicle' : 'details');
+    setCurrentStep((prev) => (prev === 'payment' ? 'vehicle' : 'details'));
   };
 
   const getBookingDetails = (): BookingDetails => ({
@@ -57,7 +57,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     travelers: formData.travelers,
     kids: formData.kids,
     bags: formData.bags,
-    vehicle: selectedVehicle
+    vehicle: selectedVehicle || undefined
   });
 
   const renderStep = () => {
@@ -67,8 +67,62 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
       case 'details':
         return (
           <WhenAndWhereStep
-            formData={formData}
-            onFormDataChange={setFormData}
+            serviceType={formData.serviceType}
+            isRideNow={!formData.date && !formData.time} // Assuming ride now is based on missing date/time
+            pickup={{ address: formData.pickupLocation }}
+            dropoff={{ address: formData.dropoffLocation }}
+            stops={formData.stops.map((stop) => ({ address: stop }))}
+            date={formData.date}
+            time={formData.time}
+            hours={formData.hours}
+            minutes={formData.minutes}
+            travelers={formData.travelers}
+            kids={formData.kids}
+            bags={formData.bags}
+            onServiceTypeChange={(type) =>
+              setFormData((prev) => ({ ...prev, serviceType: type }))
+            }
+            onRideNowToggle={(isNow) => {
+              setFormData((prev) => ({
+                ...prev,
+                date: isNow ? '' : prev.date,
+                time: isNow ? '' : prev.time
+              }));
+            }}
+            onLocationInput={(value, type, stopIndex) => {
+              if (type === 'pickup') {
+                setFormData((prev) => ({ ...prev, pickupLocation: value }));
+              } else if (type === 'dropoff') {
+                setFormData((prev) => ({ ...prev, dropoffLocation: value }));
+              } else if (type === 'stop' && stopIndex !== undefined) {
+                const updatedStops = [...formData.stops];
+                updatedStops[stopIndex] = value;
+                setFormData((prev) => ({ ...prev, stops: updatedStops }));
+              }
+            }}
+            onDateChange={(date) => setFormData((prev) => ({ ...prev, date }))}
+            onTimeChange={(time) => setFormData((prev) => ({ ...prev, time }))}
+            onHoursChange={(hours) => setFormData((prev) => ({ ...prev, hours }))}
+            onMinutesChange={(minutes) =>
+              setFormData((prev) => ({ ...prev, minutes }))
+            }
+            onTravelersChange={(travelers) =>
+              setFormData((prev) => ({ ...prev, travelers }))
+            }
+            onKidsChange={(kids) => setFormData((prev) => ({ ...prev, kids }))}
+            onBagsChange={(bags) => setFormData((prev) => ({ ...prev, bags }))}
+            onAddStop={() =>
+              setFormData((prev) => ({
+                ...prev,
+                stops: [...prev.stops, '']
+              }))
+            }
+            onRemoveStop={(index) =>
+              setFormData((prev) => ({
+                ...prev,
+                stops: prev.stops.filter((_, i) => i !== index)
+              }))
+            }
             onClose={onClose}
             onContinue={() => setCurrentStep('vehicle')}
           />
@@ -100,9 +154,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <div className="bg-white rounded-xl shadow-lg p-8">
         <ProgressBar currentStep={currentStep} />
-        <div className="mt-8">
-          {renderStep()}
-        </div>
+        <div className="mt-8">{renderStep()}</div>
       </div>
     </div>
   );

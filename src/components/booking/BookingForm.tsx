@@ -1,57 +1,121 @@
 import React, { useState } from 'react';
-import { Calendar, Calculator, Receipt, Clock, X } from 'lucide-react';
-import { BookingFormProps, TabType } from './types';
-import TabButton from './TabButton';
-import TabContent from './TabContent';
-import MobileMenu from './MobileMenu';
+import { toast } from 'sonner';
+import WhenAndWhereStep from './steps/WhenAndWhereStep';
+import PaymentStep from './steps/PaymentStep';
+import ProgressBar from './components/ProgressBar';
+import { BookingStep, ServiceType, Location } from './types';
+
+interface BookingFormProps {
+  onClose: () => void;
+}
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState<TabType>('book');
+  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+  const [serviceType, setServiceType] = useState<ServiceType>('transfer');
+  const [isRideNow, setIsRideNow] = useState(false);
+  const [pickup, setPickup] = useState<Location>();
+  const [dropoff, setDropoff] = useState<Location>();
+  const [stops, setStops] = useState<Location[]>([]);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [hours, setHours] = useState(2);
+  const [minutes, setMinutes] = useState(0);
+  const [travelers, setTravelers] = useState(1);
+  const [kids, setKids] = useState(0);
+  const [bags, setBags] = useState(1);
+  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
 
-  const tabs = [
-    { id: 'book' as TabType, icon: <Calendar className="h-5 w-5 mr-2" />, label: 'Book Now' },
-    { id: 'quote' as TabType, icon: <Calculator className="h-5 w-5 mr-2" />, label: 'Price Quote' },
-    { id: 'receipts' as TabType, icon: <Receipt className="h-5 w-5 mr-2" />, label: 'Quick Receipts' },
-    { id: 'manage' as TabType, icon: <Clock className="h-5 w-5 mr-2" />, label: 'Manage Reservations' }
-  ];
+  const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
+    // Simulate geocoding with dummy data
+    const newLocation: Location = {
+      lat: 34.0522,
+      lng: -118.2437,
+      address: value
+    };
+    
+    if (type === 'pickup') {
+      setPickup(newLocation);
+    } else if (type === 'dropoff') {
+      setDropoff(newLocation);
+    } else if (type === 'stop' && typeof stopIndex === 'number') {
+      const newStops = [...stops];
+      newStops[stopIndex] = newLocation;
+      setStops(newStops);
+    }
+  };
+
+  const handleAddStop = () => {
+    setStops([...stops, { lat: 0, lng: 0, address: '' }]);
+  };
+
+  const handleRemoveStop = (index: number) => {
+    setStops(stops.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = () => {
+    toast.success('Booking confirmed!');
+    onClose();
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 'details':
+        return (
+          <WhenAndWhereStep
+            serviceType={serviceType}
+            isRideNow={isRideNow}
+            pickup={pickup}
+            dropoff={dropoff}
+            stops={stops}
+            date={date}
+            time={time}
+            hours={hours}
+            minutes={minutes}
+            travelers={travelers}
+            kids={kids}
+            bags={bags}
+            onServiceTypeChange={setServiceType}
+            onRideNowToggle={setIsRideNow}
+            onLocationInput={handleLocationInput}
+            onDateChange={setDate}
+            onTimeChange={setTime}
+            onHoursChange={setHours}
+            onMinutesChange={setMinutes}
+            onTravelersChange={setTravelers}
+            onKidsChange={setKids}
+            onBagsChange={setBags}
+            onAddStop={handleAddStop}
+            onRemoveStop={handleRemoveStop}
+            onClose={onClose}
+            onContinue={() => setCurrentStep('payment')}
+          />
+        );
+      case 'payment':
+        return (
+          <PaymentStep
+            bookingDetails={{
+              pickupLocation: pickup?.address || '',
+              dropoffLocation: dropoff?.address || '',
+              date,
+              time,
+              travelers,
+              kids,
+              bags,
+              vehicle: selectedVehicle || { name: 'Standard Sedan', price: 100 }
+            }}
+            onBack={() => setCurrentStep('details')}
+            onSubmit={handleSubmit}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <div className="hidden lg:flex space-x-4">
-              {tabs.map((tab) => (
-                <TabButton
-                  key={tab.id}
-                  id={tab.id}
-                  icon={tab.icon}
-                  label={tab.label}
-                  isActive={activeTab === tab.id}
-                  onClick={setActiveTab}
-                />
-              ))}
-            </div>
-
-            <MobileMenu
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full text-gray-900"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          <TabContent
-            activeTab={activeTab}
-            onClose={onClose}
-          />
-        </div>
-      </div>
+    <div className="bg-white rounded-lg p-6">
+      <ProgressBar currentStep={currentStep} />
+      {renderStep()}
     </div>
   );
 };

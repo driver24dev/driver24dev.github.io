@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info, ChevronDown, ChevronUp } from 'lucide-react';
-import { PaymentFormProps } from './types';
+import { PaymentFormProps, PassengerInfo, PaymentDetails } from '../types';
 import PassengerInfoSection from './PassengerInfoSection';
 import PaymentInfoSection from './PaymentInfoSection';
 import BookingSummary from './BookingSummary';
@@ -11,7 +11,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   onSubmit,
   bookingDetails
 }) => {
-  const [passengerInfo, setPassengerInfo] = useState({
+  const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: '',
     lastName: '',
     phone: '',
@@ -22,8 +22,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     nameSign: ''
   });
 
-  const [paymentDetails, setPaymentDetails] = useState({
-    method: 'credit_card' as const,
+  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
+    method: 'credit_card',
     cardNumber: '',
     cardHolder: '',
     expiryDate: '',
@@ -46,7 +46,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!agreeToTerms) {
       return;
@@ -54,31 +54,25 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     onSubmit();
   };
 
-  const totalPrice = bookingDetails.vehicle?.price ?? 0;
-
   return (
-    <form onSubmit={handleFormSubmit} className="space-y-6">
-      {isMobile && (
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <button
-              type="button"
-              onClick={() => setShowMobileDetails(!showMobileDetails)}
-              className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 text-gray-700"
-            >
-              <Info className="h-5 w-5" />
-              {showMobileDetails ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
-            </button>
-          </div>
-          <div className="text-lg font-bold text-gray-900">
-            ${totalPrice.toFixed(2)}
-          </div>
-        </div>
-      )}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">Payment & Confirmation</h2>
+        {isMobile && (
+          <button
+            type="button"
+            onClick={() => setShowMobileDetails(!showMobileDetails)}
+            className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 text-gray-700"
+          >
+            <Info className="h-5 w-5" />
+            {showMobileDetails ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </button>
+        )}
+      </div>
 
       {isMobile && showMobileDetails && (
         <motion.div
@@ -119,6 +113,38 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               placeholder="Any special requests or instructions for your ride?"
             />
           </div>
+
+          <div className="bg-white rounded-lg p-6">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                checked={agreeToTerms}
+                onChange={(e) => setAgreeToTerms(e.target.checked)}
+              />
+              <span className="ml-2 text-sm text-gray-900">
+                I agree to the{' '}
+                <a href="#" className="text-blue-600 hover:underline">terms and conditions</a>
+              </span>
+            </label>
+          </div>
+
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex-1 mr-2 px-6 py-2 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-100 transition"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              disabled={!agreeToTerms}
+              className="flex-1 ml-2 px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Book Now
+            </button>
+          </div>
         </div>
 
         {!isMobile && (
@@ -138,27 +164,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           </motion.div>
         )}
       </div>
-
-      {isMobile && !showMobileDetails && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
-          <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={onBack}
-              className="flex-1 mr-2 px-6 py-2 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-100 transition"
-            >
-              Back
-            </button>
-            <button
-              type="submit"
-              disabled={!agreeToTerms}
-              className="flex-1 ml-2 px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Book Now
-            </button>
-          </div>
-        </div>
-      )}
     </form>
   );
 };

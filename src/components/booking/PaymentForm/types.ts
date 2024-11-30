@@ -1,21 +1,12 @@
-export interface BookingDetails {
-  pickupLocation: string;
-  dropoffLocation: string;
-  date: string;
-  time: string;
-  travelers: number;
-  kids: number;
-  bags: number;
-  vehicle: {
-    name: string;
-    price: number;
-  };
-}
+export type PaymentMethod = 'credit_card' | 'paypal' | 'crypto';
 
-export interface PaymentFormProps {
-  onBack: () => void;
-  onSubmit: () => void;
-  bookingDetails: BookingDetails;
+export interface PaymentDetails {
+  method: PaymentMethod;
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+  postalCode: string;
 }
 
 export interface PassengerInfo {
@@ -29,11 +20,16 @@ export interface PassengerInfo {
   nameSign: string;
 }
 
-export interface PaymentDetails {
-  method: 'credit_card';
-  cardNumber: string;
-  cardHolder: string;
-  expiryDate: string;
-  cvv: string;
-  postalCode: string;
+export interface BookingDetails {
+  pickupLocation: string;
+  dropoffLocation: string;
+  date: string;
+  time: string;
+  travelers: number;
+  kids: number;
+  bags: number;
+  vehicle?: {
+    name: string;
+    price: number;
+  };
 }

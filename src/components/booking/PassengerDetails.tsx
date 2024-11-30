@@ -28,17 +28,17 @@ const PassengerDetails: React.FC<PassengerDetailsProps> = ({
           <button
             type="button"
             onClick={() => onTravelersChange(Math.max(0, travelers - 1))}
-            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
+            className="p-2 rounded-lg bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-sm"
           >
-            <Minus className="h-5 w-5" />
+            <Minus className="h-4 w-4" />
           </button>
           <span className="text-xl font-semibold w-8 text-center text-gray-900">{travelers}</span>
           <button
             type="button"
             onClick={() => onTravelersChange(Math.min(8, travelers + 1))}
-            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
+            className="p-2 rounded-lg bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-sm"
           >
-            <Plus className="h-5 w-5" />
+            <Plus className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -51,17 +51,17 @@ const PassengerDetails: React.FC<PassengerDetailsProps> = ({
           <button
             type="button"
             onClick={() => onKidsChange(Math.max(0, kids - 1))}
-            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
+            className="p-2 rounded-lg bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-sm"
           >
-            <Minus className="h-5 w-5" />
+            <Minus className="h-4 w-4" />
           </button>
           <span className="text-xl font-semibold w-8 text-center text-gray-900">{kids}</span>
           <button
             type="button"
             onClick={() => onKidsChange(Math.min(4, kids + 1))}
-            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
+            className="p-2 rounded-lg bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-sm"
           >
-            <Plus className="h-5 w-5" />
+            <Plus className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -74,17 +74,17 @@ const PassengerDetails: React.FC<PassengerDetailsProps> = ({
           <button
             type="button"
             onClick={() => onBagsChange(Math.max(0, bags - 1))}
-            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
+            className="p-2 rounded-lg bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-sm"
           >
-            <Minus className="h-5 w-5" />
+            <Minus className="h-4 w-4" />
           </button>
           <span className="text-xl font-semibold w-8 text-center text-gray-900">{bags}</span>
           <button
             type="button"
             onClick={() => onBagsChange(Math.min(6, bags + 1))}
-            className="p-1 rounded-full hover:bg-gray-200 text-gray-900"
+            className="p-2 rounded-lg bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 shadow-sm"
           >
-            <Plus className="h-5 w-5" />
+            <Plus className="h-4 w-4" />
           </button>
         </div>
       </div>

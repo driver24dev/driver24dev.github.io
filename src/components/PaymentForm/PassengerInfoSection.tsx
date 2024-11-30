@@ -1,3 +1,4 @@
+import React from 'react';
 import PhoneInput from 'react-phone-input-2';
 import { PassengerInfo } from './types';
 import 'react-phone-input-2/lib/style.css';
@@ -41,10 +42,17 @@ const PassengerInfoSection = ({
             country="us"
             value={passengerInfo.phone}
             onChange={(phone) => onPassengerInfoChange({ ...passengerInfo, phone })}
-            containerClass="w-full"
-            inputClass="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            inputProps={{
-              required: true
+            containerStyle={{ width: '100%' }}
+            inputStyle={{
+              width: '100%',
+              height: '42px',
+              fontSize: '16px',
+              paddingLeft: '48px'
+            }}
+            buttonStyle={{
+              backgroundColor: 'transparent',
+              borderRadius: '8px 0 0 8px',
+              borderRight: 'none'
             }}
           />
         </div>

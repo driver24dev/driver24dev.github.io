@@ -36,7 +36,7 @@ interface WhenAndWhereStepProps {
   onContinue: () => void;
 }
 
-const WhenAndWhereStep: React.FC<WhenAndWhereStepProps> = ({
+const WhenAndWhereStep = ({
   serviceType,
   isRideNow,
   pickup,
@@ -62,8 +62,8 @@ const WhenAndWhereStep: React.FC<WhenAndWhereStepProps> = ({
   onAddStop,
   onRemoveStop,
   onClose,
-  onContinue,
-}) => {
+  onContinue
+}: WhenAndWhereStepProps) => {
   return (
     <div className="flex flex-col lg:flex-row gap-6">
       <div className="flex-1 space-y-6">
@@ -80,7 +80,7 @@ const WhenAndWhereStep: React.FC<WhenAndWhereStepProps> = ({
             onMinutesChange={onMinutesChange}
           />
         )}
-
+        
         <RideToggle isRideNow={isRideNow} onToggle={onRideNowToggle} />
 
         {!isRideNow && (
@@ -97,7 +97,7 @@ const WhenAndWhereStep: React.FC<WhenAndWhereStepProps> = ({
           <LocationInput
             label="Pickup Location"
             onChange={(value) => onLocationInput(value, 'pickup')}
-            value={pickup?.address || ''}
+            value={pickup?.address}
             required
           />
 
@@ -106,7 +106,7 @@ const WhenAndWhereStep: React.FC<WhenAndWhereStepProps> = ({
               key={index}
               label={`Stop #${index + 1}`}
               onChange={(value) => onLocationInput(value, 'stop', index)}
-              value={stop.address || ''}
+              value={stop.address}
               onRemove={() => onRemoveStop(index)}
               showRemoveButton
             />
@@ -115,7 +115,7 @@ const WhenAndWhereStep: React.FC<WhenAndWhereStepProps> = ({
           <LocationInput
             label="Dropoff Location"
             onChange={(value) => onLocationInput(value, 'dropoff')}
-            value={dropoff?.address || ''}
+            value={dropoff?.address}
             required
           />
 

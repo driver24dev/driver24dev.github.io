@@ -5,6 +5,10 @@ export interface PassengerInfo {
   lastName: string;
   phone: string;
   email: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+  nameSign: string;
 }
 
 export interface PaymentDetails {

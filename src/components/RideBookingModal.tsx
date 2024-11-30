@@ -4,6 +4,7 @@ import BookTab from './booking/tabs/BookTab';
 import QuoteTab from './booking/tabs/QuoteTab';
 import ReceiptsTab from './booking/tabs/ReceiptsTab';
 import ManageTab from './booking/tabs/ManageTab';
+import ProgressBar from './booking/ProgressBar';
 import { TabType, BookingStep, ServiceType, Location } from './booking/types';
 
 interface RideBookingModalProps {
@@ -134,50 +135,25 @@ const RideBookingModal: React.FC<RideBookingModalProps> = ({ onClose }) => {
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <div className="hidden lg:flex space-x-4">
-              <button
-                onClick={() => setActiveTab('book')}
-                className={`flex items-center px-4 py-2 rounded-lg ${
-                  activeTab === 'book'
-                    ? 'bg-black text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <Calendar className="h-5 w-5 mr-2" />
-                Book Now
-              </button>
-              <button
-                onClick={() => setActiveTab('quote')}
-                className={`flex items-center px-4 py-2 rounded-lg ${
-                  activeTab === 'quote'
-                    ? 'bg-black text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <Calculator className="h-5 w-5 mr-2" />
-                Price Quote
-              </button>
-              <button
-                onClick={() => setActiveTab('receipts')}
-                className={`flex items-center px-4 py-2 rounded-lg ${
-                  activeTab === 'receipts'
-                    ? 'bg-black text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <Receipt className="h-5 w-5 mr-2" />
-                Quick Receipts
-              </button>
-              <button
-                onClick={() => setActiveTab('manage')}
-                className={`flex items-center px-4 py-2 rounded-lg ${
-                  activeTab === 'manage'
-                    ? 'bg-black text-white'
-                    : 'text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <Clock className="h-5 w-5 mr-2" />
-                Manage Reservations
-              </button>
+              {[
+                { id: 'book', icon: <Calendar className="h-5 w-5 mr-2" />, label: 'Book Now' },
+                { id: 'quote', icon: <Calculator className="h-5 w-5 mr-2" />, label: 'Price Quote' },
+                { id: 'receipts', icon: <Receipt className="h-5 w-5 mr-2" />, label: 'Quick Receipts' },
+                { id: 'manage', icon: <Clock className="h-5 w-5 mr-2" />, label: 'Manage Reservations' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as TabType)}
+                  className={`flex items-center px-4 py-2 rounded-lg ${
+                    activeTab === tab.id
+                      ? 'bg-black text-white'
+                      : 'text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
             </div>
 
             <div className="lg:hidden relative flex items-center">
@@ -187,10 +163,10 @@ const RideBookingModal: React.FC<RideBookingModalProps> = ({ onClose }) => {
                 onChange={(e) => setActiveTab(e.target.value as TabType)}
                 className="pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none text-gray-900 font-medium"
               >
-                <option value="book" className="text-gray-900 font-medium">Book Now</option>
-                <option value="quote" className="text-gray-900 font-medium">Price Quote</option>
-                <option value="receipts" className="text-gray-900 font-medium">Quick Receipts</option>
-                <option value="manage" className="text-gray-900 font-medium">Manage Reservations</option>
+                <option value="book">Book Now</option>
+                <option value="quote">Price Quote</option>
+                <option value="receipts">Quick Receipts</option>
+                <option value="manage">Manage Reservations</option>
               </select>
             </div>
 
@@ -201,6 +177,10 @@ const RideBookingModal: React.FC<RideBookingModalProps> = ({ onClose }) => {
               <X className="h-6 w-6" />
             </button>
           </div>
+
+          {activeTab === 'book' && (
+            <ProgressBar currentStep={bookingStep} />
+          )}
 
           {renderActiveTab()}
         </div>

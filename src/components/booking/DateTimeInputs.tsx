@@ -25,7 +25,7 @@ const DateTimeInputs: React.FC<DateTimeInputsProps> = ({
         </label>
         <input
           type="date"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
           value={date}
           onChange={(e) => onDateChange(e.target.value)}
           required={required}
@@ -38,7 +38,7 @@ const DateTimeInputs: React.FC<DateTimeInputsProps> = ({
         </label>
         <input
           type="time"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
           value={time}
           onChange={(e) => onTimeChange(e.target.value)}
           required={required}

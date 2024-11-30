@@ -2,7 +2,7 @@ import React from 'react';
 import { BookingDetails } from './types';
 import { formatDate, formatTime, calculatePrices } from './utils';
 
-interface BookingSummaryProps {
+export interface BookingSummaryProps {
   bookingDetails: BookingDetails;
   agreeToTerms: boolean;
   onAgreeToTermsChange: (agreed: boolean) => void;
@@ -15,7 +15,7 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   onAgreeToTermsChange,
   onBack
 }) => {
-  const { serviceFee, totalPrice } = calculatePrices(bookingDetails.vehicle.price);
+  const { serviceFee, totalPrice } = calculatePrices(bookingDetails.vehicle?.price || 0);
 
   return (
     <div className="bg-gray-50 p-6 rounded-lg space-y-4">
@@ -45,56 +45,43 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
         </p>
       </div>
 
-      <div>
-        <p className="text-sm font-medium text-gray-900">Vehicle</p>
-        <p className="text-gray-900">{bookingDetails.vehicle.name}</p>
-      </div>
+      {bookingDetails.vehicle && (
+        <div>
+          <p className="text-sm font-medium text-gray-900">Vehicle</p>
+          <p className="text-gray-900">{bookingDetails.vehicle.name}</p>
+        </div>
+      )}
 
-      <div className="border-t border-gray-200 pt-4 mt-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="font-medium text-gray-900">Base Fare</span>
-          <span className="text-gray-900">${bookingDetails.vehicle.price.toFixed(2)}</span>
+      {bookingDetails.vehicle && (
+        <div className="border-t border-gray-200 pt-4 mt-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-medium text-gray-900">Base Fare</span>
+            <span className="text-gray-900">${bookingDetails.vehicle.price.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-medium text-gray-900">Service Fee</span>
+            <span className="text-gray-900">${serviceFee.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center text-lg font-bold pt-2 border-t">
+            <span className="text-gray-900">Total</span>
+            <span className="text-gray-900">${totalPrice.toFixed(2)}</span>
+          </div>
         </div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="font-medium text-gray-900">Service Fee</span>
-          <span className="text-gray-900">${serviceFee.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between items-center text-lg font-bold pt-2 border-t">
-          <span className="text-gray-900">Total</span>
-          <span className="text-gray-900">${totalPrice.toFixed(2)}</span>
-        </div>
-      </div>
+      )}
 
-      <div className="mt-6">
+      <div className="pt-4">
         <label className="flex items-center">
           <input
             type="checkbox"
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             checked={agreeToTerms}
             onChange={(e) => onAgreeToTermsChange(e.target.checked)}
+            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
           <span className="ml-2 text-sm text-gray-900">
             I agree to the{' '}
             <a href="#" className="text-blue-600 hover:underline">terms and conditions</a>
           </span>
         </label>
-      </div>
-
-      <div className="flex justify-between pt-6">
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex-1 mr-2 px-6 py-2 border border-gray-300 text-gray-900 rounded-lg hover:bg-gray-100 transition"
-        >
-          Back
-        </button>
-        <button
-          type="submit"
-          disabled={!agreeToTerms}
-          className="flex-1 ml-2 px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Book Now
-        </button>
       </div>
     </div>
   );

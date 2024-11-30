@@ -9,6 +9,10 @@ export interface Location {
   address: string;
 }
 
+export interface BookingFormProps {
+  onClose: () => void;
+}
+
 export interface BookingFormData {
   serviceType: ServiceType;
   pickupLocation: string;

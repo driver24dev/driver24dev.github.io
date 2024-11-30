@@ -5,13 +5,11 @@ import { PaymentMethod } from '../../types';
 interface PaymentMethodSelectProps {
   value: PaymentMethod;
   onChange: (method: PaymentMethod) => void;
-  className?: string;
 }
 
 const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
   value,
-  onChange,
-  className = ''
+  onChange
 }) => {
   const methods = [
     {
@@ -35,7 +33,7 @@ const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
   ];
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${className}`}>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {methods.map(({ id, label, icon: Icon, description }) => (
         <button
           key={id}

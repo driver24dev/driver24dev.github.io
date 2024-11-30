@@ -1,6 +1,5 @@
 import React from 'react';
 import { Check, MapPin, Car, CreditCard } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { BookingStep } from '../types';
 
@@ -25,9 +24,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
         <div className="absolute top-6 left-[10%] right-[10%] h-[2px] bg-gray-200">
           <div 
             className="h-full bg-green-500 transition-all duration-500"
-            style={{ 
-              width: `${getCurrentStepIndex() * 50}%`
-            }}
+            style={{ width: `${getCurrentStepIndex() * 50}%` }}
           />
         </div>
 
@@ -45,12 +42,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: index * 0.2 }}
-                className={cn(
-                  "w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all duration-200",
-                  isCompleted && "bg-green-500 text-white shadow-lg shadow-green-200",
-                  isCurrent && "bg-black text-white shadow-lg",
-                  !isCompleted && !isCurrent && "bg-white text-gray-400 border-2 border-gray-200"
-                )}
+                className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all duration-200 ${
+                  isCompleted ? 'bg-green-500 text-white shadow-lg shadow-green-200' :
+                  isCurrent ? 'bg-black text-white shadow-lg' :
+                  'bg-white text-gray-400 border-2 border-gray-200'
+                }`}
               >
                 {isCompleted ? (
                   <Check className="h-6 w-6" />
@@ -59,12 +55,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep }) => {
                 )}
               </motion.div>
               
-              <span className={cn(
-                "text-sm font-medium transition-colors duration-200 text-center",
-                isCompleted && "text-green-600",
-                isCurrent && "text-black",
-                !isCurrent && !isCompleted && "text-gray-400"
-              )}>
+              <span className={`text-sm font-medium transition-colors duration-200 text-center ${
+                isCompleted ? 'text-green-600' :
+                isCurrent ? 'text-black' :
+                'text-gray-400'
+              }`}>
                 {step.label}
               </span>
             </div>

@@ -19,26 +19,26 @@ const DateTimeInputs: React.FC<DateTimeInputsProps> = ({
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          <Calendar className="inline-block h-4 w-4 mr-1" />
+        <label className="block text-sm font-medium text-gray-900 mb-1">
+          <Calendar className="inline-block h-4 w-4 mr-1 text-gray-700" />
           Pickup Date
         </label>
         <input
           type="date"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
           value={date}
           onChange={(e) => onDateChange(e.target.value)}
           required={required}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          <Clock className="inline-block h-4 w-4 mr-1" />
+        <label className="block text-sm font-medium text-gray-900 mb-1">
+          <Clock className="inline-block h-4 w-4 mr-1 text-gray-700" />
           Pickup Time
         </label>
         <input
           type="time"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
           value={time}
           onChange={(e) => onTimeChange(e.target.value)}
           required={required}

@@ -1,6 +1,5 @@
 export type ServiceType = 'transfer' | 'hourly';
 export type BookingStep = 'details' | 'vehicle' | 'payment';
-export type TabType = 'book' | 'quote' | 'receipts' | 'manage';
 export type PaymentMethod = 'credit_card' | 'paypal' | 'crypto';
 
 export interface Location {
@@ -23,22 +22,15 @@ export interface BookingDetails {
   };
 }
 
-export interface PassengerInfo {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  contactName: string;
-  contactPhone: string;
-  contactEmail: string;
-  nameSign: string;
-}
-
-export interface PaymentDetails {
-  method: PaymentMethod;
-  cardNumber: string;
-  cardHolder: string;
-  expiryDate: string;
-  cvv: string;
-  postalCode: string;
+export interface Vehicle {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  capacity: {
+    passengers: number;
+    luggage: number;
+  };
+  basePrice: number;
+  pricePerMile: number;
 }

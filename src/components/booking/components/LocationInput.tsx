@@ -30,7 +30,7 @@ const LocationInput: React.FC<LocationInputProps> = ({
         <input
           type="text"
           placeholder="Enter location"
-          className="w-full pl-10 pr-20 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pl-10 pr-20 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
           onChange={(e) => onChange(e.target.value)}
           required={required}
           value={value}
@@ -54,7 +54,7 @@ const LocationInput: React.FC<LocationInputProps> = ({
         </div>
       </div>
       {value && (
-        <p className="mt-1 text-sm text-gray-500">{value}</p>
+        <p className="mt-1 text-sm text-gray-600">{value}</p>
       )}
     </div>
   );

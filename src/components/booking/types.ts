@@ -9,33 +9,6 @@ export interface Location {
   address: string;
 }
 
-export interface BookingDetails {
-  pickupLocation: string;
-  dropoffLocation: string;
-  date: string;
-  time: string;
-  travelers: number;
-  kids: number;
-  bags: number;
-  vehicle: {
-    name: string;
-    price: number;
-  };
-}
-
-export interface Vehicle {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  capacity: {
-    passengers: number;
-    luggage: number;
-  };
-  basePrice: number;
-  pricePerMile: number;
-}
-
 export interface BookingFormData {
   serviceType: ServiceType;
   pickupLocation: string;
@@ -52,4 +25,9 @@ export interface BookingFormData {
   email: string;
   phone: string;
   specialRequests: string;
+}
+
+export interface WhenAndWhereStepProps {
+  formData: BookingFormData;
+  onFormDataChange: (data: BookingFormData) => void;
 }

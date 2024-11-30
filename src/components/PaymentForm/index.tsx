@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { PaymentFormProps, PassengerInfo, PaymentDetails } from './types';
-import { calculatePrices } from './utils';
 import PassengerInfoSection from './PassengerInfoSection';
 import PaymentInfoSection from './PaymentInfoSection';
 import BookingSummary from './BookingSummary';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CreditCard } from 'lucide-react';
-import { PaymentDetails } from './types';
+import { PaymentDetails, PaymentMethod } from './types';
 import PaymentMethodSelect from './PaymentMethodSelect';
 
 interface PaymentInfoSectionProps {
@@ -66,16 +66,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
-              <input
-                type="text"
-                value={paymentDetails.postalCode}
-                onChange={(e) => onPaymentDetailsChange({ ...paymentDetails, postalCode: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
-              />
-            </div>
           </div>
         );
       case 'paypal':
@@ -95,16 +85,18 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     }
   };
 
+  const handleMethodChange = (method: PaymentMethod) => {
+    onPaymentDetailsChange({ ...paymentDetails, method });
+  };
+
   return (
     <div className="bg-white rounded-lg p-6 space-y-4">
       <h3 className="text-lg font-semibold text-gray-900">Payment Information</h3>
       <PaymentMethodSelect
         value={paymentDetails.method}
-        onChange={(method) => onPaymentDetailsChange({ ...paymentDetails, method })}
+        onChange={handleMethodChange}
       />
       {renderPaymentFields()}
     </div>
   );
 };
-
-export default PaymentInfoSection;

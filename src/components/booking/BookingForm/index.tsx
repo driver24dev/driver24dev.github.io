@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import WhenAndWhereStep from '../steps/WhenAndWhereStep';
-import VehicleSelectionStep from '../steps/VehicleSelectionStep';
-import PaymentStep from '../steps/PaymentStep';
-import ProgressBar from '../ProgressBar';
-import { BookingStep, ServiceType, Location } from '../types';
+import { BookingStep, BookingFormData, ServiceType } from '../types';
 import { FormContainer } from './FormContainer';
+import WhenAndWhereStep from './WhenAndWhereStep';
+import VehicleSelection from './VehicleSelection';
+import PaymentDetails from './PaymentDetails';
+import ProgressBar from '../ProgressBar';
 
 interface BookingFormProps {
   onClose: () => void;
 }
 
-const initialFormData = {
-  serviceType: 'transfer' as ServiceType,
+const initialFormData: BookingFormData = {
+  serviceType: 'transfer',
   pickupLocation: '',
   dropoffLocation: '',
   stops: [],
@@ -31,8 +31,8 @@ const initialFormData = {
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState<BookingStep>('details');
-  const [formData, setFormData] = useState(initialFormData);
-  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
+  const [formData, setFormData] = useState<BookingFormData>(initialFormData);
+  const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +80,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
         );
       case 'vehicle':
         return (
-          <VehicleSelectionStep
+          <VehicleSelection
             formData={formData}
             selectedVehicle={selectedVehicle}
             onVehicleSelect={setSelectedVehicle}
@@ -89,7 +89,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
         );
       case 'payment':
         return (
-          <PaymentStep
+          <PaymentDetails
             formData={formData}
             selectedVehicle={selectedVehicle}
           />

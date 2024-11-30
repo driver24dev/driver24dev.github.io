@@ -9,10 +9,6 @@ export interface Location {
   address: string;
 }
 
-export interface BookingFormProps {
-  onClose: () => void;
-}
-
 export interface BookingFormData {
   serviceType: ServiceType;
   pickupLocation: string;
@@ -32,15 +28,6 @@ export interface BookingFormData {
   paymentMethod?: PaymentMethod;
 }
 
-export interface Vehicle {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  capacity: {
-    passengers: number;
-    luggage: number;
-  };
-  basePrice: number;
-  pricePerMile: number;
+export interface BookingFormProps {
+  onClose: () => void;
 }

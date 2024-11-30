@@ -31,3 +31,20 @@ export interface BookingFormData {
 export interface BookingFormProps {
   onClose: () => void;
 }
+
+export interface WhenAndWhereStepProps {
+  formData: BookingFormData;
+  onFormDataChange: (data: BookingFormData) => void;
+}
+
+export interface VehicleSelectionStepProps {
+  formData: BookingFormData;
+  selectedVehicle: { name: string; price: number; } | null;
+  onVehicleSelect: (vehicle: { name: string; price: number; }) => void;
+  onBack: () => void;
+}
+
+export interface PaymentStepProps {
+  formData: BookingFormData;
+  selectedVehicle: { name: string; price: number; } | null;
+}

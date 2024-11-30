@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import WhenAndWhereStep from './steps/WhenAndWhereStep';
-import VehicleSelectionStep from './steps/VehicleSelectionStep';
-import PaymentStep from './steps/PaymentStep';
-import ProgressBar from '../../ProgressBar';
-import { BookingStep, BookingFormData } from '../../types';
+import BookingDetails from './BookingDetails';
+import VehicleSelection from './VehicleSelection';
+import PaymentDetails from './PaymentDetails';
+import ProgressBar from '../ProgressBar';
+import { BookingStep, BookingFormData } from '../types';
+import { FormContainer } from './FormContainer';
 
 interface BookingFormProps {
   onClose: () => void;
@@ -31,7 +32,7 @@ const initialFormData: BookingFormData = {
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState<BookingStep>('details');
   const [formData, setFormData] = useState<BookingFormData>(initialFormData);
-  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number; } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,21 +66,21 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   };
 
   const handleBack = () => {
-    setCurrentStep(prev => prev === 'payment' ? 'vehicle' : 'details');
+    setCurrentStep((prev: BookingStep) => prev === 'payment' ? 'vehicle' : 'details');
   };
 
   const renderStep = () => {
     switch (currentStep) {
       case 'details':
         return (
-          <WhenAndWhereStep
+          <BookingDetails
             formData={formData}
             onFormDataChange={setFormData}
           />
         );
       case 'vehicle':
         return (
-          <VehicleSelectionStep
+          <VehicleSelection
             formData={formData}
             selectedVehicle={selectedVehicle}
             onVehicleSelect={setSelectedVehicle}
@@ -88,7 +89,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
         );
       case 'payment':
         return (
-          <PaymentStep
+          <PaymentDetails
             formData={formData}
             selectedVehicle={selectedVehicle}
           />
@@ -99,7 +100,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <FormContainer>
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-8">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <ProgressBar currentStep={currentStep} />
@@ -127,7 +128,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
           </div>
         </div>
       </form>
-    </div>
+    </FormContainer>
   );
 };
 

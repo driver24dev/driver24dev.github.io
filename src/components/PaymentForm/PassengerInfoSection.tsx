@@ -1,5 +1,5 @@
 import React from 'react';
-import PhoneInput, { PhoneInputProps } from 'react-phone-input-2';
+import PhoneInput from 'react-phone-input-2';
 import { PassengerInfo } from './types';
 import 'react-phone-input-2/lib/style.css';
 
@@ -38,7 +38,7 @@ const PassengerInfoSection: React.FC<PassengerInfoSectionProps> = ({
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-          <PhoneInput<PhoneInputProps>
+          <PhoneInput
             country="us"
             value={passengerInfo.phone}
             onChange={(phone) => onPassengerInfoChange({ ...passengerInfo, phone })}

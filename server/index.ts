@@ -37,6 +37,8 @@ app.use('/api/rides', ridesRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port Continuing the server/index.ts file content:
+
+, () => {
   console.log(`Server running on port ${port}`);
 });

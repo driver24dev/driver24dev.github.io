@@ -1,160 +1,164 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { BookingStep, BookingFormData, BookingDetails } from '../types/booking';
-import WhenAndWhereStep from './WhenAndWhereStep';
-import VehicleSelectionStep from './steps/VehicleSelectionStep';
-import PaymentStep from './steps/PaymentStep';
-import ProgressBar from '../components/ProgressBar';
-
-interface BookingFormProps {
-  onClose: () => void;
-}
+import { Calendar, Calculator, Receipt, Clock, X, Menu } from 'lucide-react';
+import BookTab from '../tabs/BookTab';
+import QuoteTab from '../tabs/QuoteTab';
+import ReceiptsTab from '../tabs/ReceiptsTab';
+import ManageTab from '../tabs/ManageTab';
+import { TabType, BookingStep, ServiceType, Location } from '../types';
+import { BookingFormProps, BookingFormData } from './types';
+import { findLocationMatch } from './utils';
 
 const initialFormData: BookingFormData = {
   serviceType: 'transfer',
-  pickupLocation: '',
-  dropoffLocation: '',
+  pickupLocation: null,
+  dropoffLocation: null,
   stops: [],
   date: '',
   time: '',
-  hours: 2,
+  hours: 0,
   minutes: 0,
-  travelers: 1,
-  kids: 0,
-  bags: 1,
-  name: '',
-  email: '',
-  phone: '',
+  passengers: 0,
+  children: 0,
+  luggage: 0,
+  selectedVehicle: null,
   specialRequests: ''
 };
 
 const BookingForm: React.FC<BookingFormProps> = ({ onClose }) => {
-  const [currentStep, setCurrentStep] = useState<BookingStep>('details');
+  const [activeTab, setActiveTab] = useState<TabType>('book');
+  const [bookingStep, setBookingStep] = useState<BookingStep>('details');
   const [formData, setFormData] = useState<BookingFormData>(initialFormData);
-  const [selectedVehicle, setSelectedVehicle] = useState<{ name: string; price: number } | null>(null);
 
-  const handleSubmit = async () => {
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success('Booking submitted successfully!');
-      onClose();
-    } catch (error) {
-      console.error('Booking error:', error);
-      toast.error('Failed to submit booking');
+  const handleLocationInput = async (value: string, type: 'pickup' | 'dropoff' | 'stop', stopIndex?: number) => {
+    const locationMatch = findLocationMatch(value);
+    
+    if (locationMatch) {
+      const newLocation: Location = {
+        lat: locationMatch.lat,
+        lng: locationMatch.lng,
+        address: locationMatch.name
+      };
+      
+      setFormData(prev => {
+        if (type === 'pickup') {
+          return { ...prev, pickupLocation: newLocation };
+        } else if (type === 'dropoff') {
+          return { ...prev, dropoffLocation: newLocation };
+        } else if (type === 'stop' && typeof stopIndex === 'number') {
+          const newStops = [...prev.stops];
+          newStops[stopIndex] = newLocation;
+          return { ...prev, stops: newStops };
+        }
+        return prev;
+      });
     }
   };
 
-  const handleBack = () => {
-    setCurrentStep((prev) => (prev === 'payment' ? 'vehicle' : 'details'));
+  const handleVehicleSelect = (vehicle: { name: string; price: number }) => {
+    setFormData(prev => ({ ...prev, selectedVehicle: vehicle }));
   };
 
-  const getBookingDetails = (): BookingDetails => ({
-    pickupLocation: formData.pickupLocation,
-    dropoffLocation: formData.dropoffLocation,
-    date: formData.date,
-    time: formData.time,
-    travelers: formData.travelers,
-    kids: formData.kids,
-    bags: formData.bags,
-    vehicle: selectedVehicle || undefined
-  });
+  const addStop = () => {
+    setFormData(prev => ({
+      ...prev,
+      stops: [...prev.stops, { lat: 0, lng: 0, address: '' }]
+    }));
+  };
 
-  const renderStep = () => {
-    const bookingDetails = getBookingDetails();
+  const removeStop = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      stops: prev.stops.filter((_, i) => i !== index)
+    }));
+  };
 
-    switch (currentStep) {
-      case 'details':
+  const renderActiveTab = () => {
+    const commonProps = {
+      formData,
+      onLocationInput: handleLocationInput,
+      onAddStop: addStop,
+      onRemoveStop: removeStop,
+      onClose
+    };
+
+    switch (activeTab) {
+      case 'book':
         return (
-          <WhenAndWhereStep
-            serviceType={formData.serviceType}
-            isRideNow={!formData.date && !formData.time} // Assuming ride now is based on missing date/time
-            pickup={{ address: formData.pickupLocation }}
-            dropoff={{ address: formData.dropoffLocation }}
-            stops={formData.stops.map((stop) => ({ address: stop }))}
-            date={formData.date}
-            time={formData.time}
-            hours={formData.hours}
-            minutes={formData.minutes}
-            travelers={formData.travelers}
-            kids={formData.kids}
-            bags={formData.bags}
-            onServiceTypeChange={(type) =>
-              setFormData((prev) => ({ ...prev, serviceType: type }))
+          <BookTab
+            {...commonProps}
+            bookingStep={bookingStep}
+            onStepChange={setBookingStep}
+            onVehicleSelect={handleVehicleSelect}
+            onFormDataChange={(updates: Partial<BookingFormData>) => 
+              setFormData(prev => ({ ...prev, ...updates }))
             }
-            onRideNowToggle={(isNow) => {
-              setFormData((prev) => ({
-                ...prev,
-                date: isNow ? '' : prev.date,
-                time: isNow ? '' : prev.time
-              }));
-            }}
-            onLocationInput={(value, type, stopIndex) => {
-              if (type === 'pickup') {
-                setFormData((prev) => ({ ...prev, pickupLocation: value }));
-              } else if (type === 'dropoff') {
-                setFormData((prev) => ({ ...prev, dropoffLocation: value }));
-              } else if (type === 'stop' && stopIndex !== undefined) {
-                const updatedStops = [...formData.stops];
-                updatedStops[stopIndex] = value;
-                setFormData((prev) => ({ ...prev, stops: updatedStops }));
-              }
-            }}
-            onDateChange={(date) => setFormData((prev) => ({ ...prev, date }))}
-            onTimeChange={(time) => setFormData((prev) => ({ ...prev, time }))}
-            onHoursChange={(hours) => setFormData((prev) => ({ ...prev, hours }))}
-            onMinutesChange={(minutes) =>
-              setFormData((prev) => ({ ...prev, minutes }))
-            }
-            onTravelersChange={(travelers) =>
-              setFormData((prev) => ({ ...prev, travelers }))
-            }
-            onKidsChange={(kids) => setFormData((prev) => ({ ...prev, kids }))}
-            onBagsChange={(bags) => setFormData((prev) => ({ ...prev, bags }))}
-            onAddStop={() =>
-              setFormData((prev) => ({
-                ...prev,
-                stops: [...prev.stops, '']
-              }))
-            }
-            onRemoveStop={(index) =>
-              setFormData((prev) => ({
-                ...prev,
-                stops: prev.stops.filter((_, i) => i !== index)
-              }))
-            }
-            onClose={onClose}
-            onContinue={() => setCurrentStep('vehicle')}
           />
         );
-      case 'vehicle':
-        return (
-          <VehicleSelectionStep
-            bookingDetails={bookingDetails}
-            selectedVehicle={selectedVehicle?.name || null}
-            onVehicleSelect={(vehicle) => setSelectedVehicle(vehicle)}
-            onBack={handleBack}
-            onContinue={() => setCurrentStep('payment')}
-          />
-        );
-      case 'payment':
-        return (
-          <PaymentStep
-            bookingDetails={bookingDetails}
-            onBack={handleBack}
-            onSubmit={handleSubmit}
-          />
-        );
+      case 'quote':
+        return <QuoteTab {...commonProps} />;
+      case 'receipts':
+        return <ReceiptsTab />;
+      case 'manage':
+        return <ManageTab />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <div className="bg-white rounded-xl shadow-lg p-8">
-        <ProgressBar currentStep={currentStep} />
-        <div className="mt-8">{renderStep()}</div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <div className="hidden lg:flex space-x-4">
+              {[
+                { id: 'book', icon: <Calendar className="h-5 w-5 mr-2" />, label: 'Book Now' },
+                { id: 'quote', icon: <Calculator className="h-5 w-5 mr-2" />, label: 'Price Quote' },
+                { id: 'receipts', icon: <Receipt className="h-5 w-5 mr-2" />, label: 'Quick Receipts' },
+                { id: 'manage', icon: <Clock className="h-5 w-5 mr-2" />, label: 'Manage Reservations' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as TabType)}
+                  className={`flex items-center px-4 py-2 rounded-lg ${
+                    activeTab === tab.id
+                      ? 'bg-black text-white'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="lg:hidden flex items-center space-x-4">
+              <div className="relative flex items-center">
+                <Menu className="absolute left-3 h-5 w-5 text-gray-500 pointer-events-none" />
+                <select
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value as TabType)}
+                  className="bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="book">Book Now</option>
+                  <option value="quote">Price Quote</option>
+                  <option value="receipts">Quick Receipts</option>
+                  <option value="manage">Manage Reservations</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-full text-gray-900"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          {renderActiveTab()}
+        </div>
       </div>
     </div>
   );

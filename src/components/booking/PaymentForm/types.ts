@@ -1,12 +1,9 @@
-export type PaymentMethod = 'credit_card' | 'paypal' | 'crypto';
+import { BookingFormData } from '../BookingForm/types';
 
-export interface PaymentDetails {
-  method: PaymentMethod;
-  cardNumber: string;
-  cardHolder: string;
-  expiryDate: string;
-  cvv: string;
-  postalCode: string;
+export interface PaymentFormProps {
+  onBack: () => void;
+  onSubmit: () => void;
+  bookingDetails: BookingFormData;
 }
 
 export interface PassengerInfo {
@@ -20,16 +17,19 @@ export interface PassengerInfo {
   nameSign: string;
 }
 
-export interface BookingDetails {
-  pickupLocation: string;
-  dropoffLocation: string;
-  date: string;
-  time: string;
-  travelers: number;
-  kids: number;
-  bags: number;
-  vehicle?: {
-    name: string;
-    price: number;
-  };
+export type PaymentMethod = 'credit_card' | 'paypal' | 'crypto';
+
+export interface PaymentDetails {
+  method: PaymentMethod;
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+  postalCode: string;
+}
+
+export interface PaymentOption {
+  id: PaymentMethod;
+  label: string;
+  description: string;
 }

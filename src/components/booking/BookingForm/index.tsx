@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { BookingStep, BookingFormData, BookingDetails } from '../types/booking';
-import WhenAndWhereStep from './steps/WhenAndWhereStep';
+import WhenAndWhereStep from './WhenAndWhereStep';
 import VehicleSelectionStep from './steps/VehicleSelectionStep';
 import PaymentStep from './steps/PaymentStep';
 import ProgressBar from '../components/ProgressBar';

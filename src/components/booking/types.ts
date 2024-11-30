@@ -28,23 +28,15 @@ export interface BookingFormData {
   paymentMethod?: PaymentMethod;
 }
 
-export interface BookingFormProps {
-  onClose: () => void;
-}
-
-export interface WhenAndWhereStepProps {
-  formData: BookingFormData;
-  onFormDataChange: (data: BookingFormData) => void;
-}
-
-export interface VehicleSelectionStepProps {
-  formData: BookingFormData;
-  selectedVehicle: { name: string; price: number; } | null;
-  onVehicleSelect: (vehicle: { name: string; price: number; }) => void;
-  onBack: () => void;
-}
-
-export interface PaymentStepProps {
-  formData: BookingFormData;
-  selectedVehicle: { name: string; price: number; } | null;
+export interface Vehicle {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  capacity: {
+    passengers: number;
+    luggage: number;
+  };
+  basePrice: number;
+  pricePerMile: number;
 }

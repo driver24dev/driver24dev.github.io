@@ -1,7 +1,7 @@
 export type ServiceType = 'transfer' | 'hourly';
 export type BookingStep = 'details' | 'vehicle' | 'payment';
 export type TabType = 'book' | 'quote' | 'receipts' | 'manage';
-export type PaymentMethod = 'credit_card' | 'paypal' | 'crypto' | 'cash';
+export type PaymentMethod = 'credit_card' | 'paypal' | 'crypto';
 
 export interface Location {
   lat: number;
@@ -9,34 +9,36 @@ export interface Location {
   address: string;
 }
 
-export interface BookingFormData {
-  serviceType: ServiceType;
+export interface BookingDetails {
   pickupLocation: string;
   dropoffLocation: string;
-  stops: string[];
   date: string;
   time: string;
-  hours: number;
-  minutes: number;
   travelers: number;
   kids: number;
   bags: number;
-  name: string;
-  email: string;
-  phone: string;
-  specialRequests: string;
-  paymentMethod?: PaymentMethod;
+  vehicle: {
+    name: string;
+    price: number;
+  };
 }
 
-export interface Vehicle {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  capacity: {
-    passengers: number;
-    luggage: number;
-  };
-  basePrice: number;
-  pricePerMile: number;
+export interface PassengerInfo {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+  nameSign: string;
+}
+
+export interface PaymentDetails {
+  method: PaymentMethod;
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+  postalCode: string;
 }

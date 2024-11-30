@@ -4,7 +4,7 @@ import WhenAndWhereStep from './steps/WhenAndWhereStep';
 import VehicleSelectionStep from './steps/VehicleSelectionStep';
 import PaymentForm from './PaymentForm';
 import ProgressBar from './ProgressBar';
-import { BookingStep, ServiceType, TabType, Location } from './types';
+import { BookingStep, ServiceType, TabType, Location } from './booking/types';
 
 interface BookingFormProps {
   onClose: () => void;

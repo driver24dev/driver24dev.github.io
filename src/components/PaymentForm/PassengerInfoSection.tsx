@@ -8,10 +8,10 @@ interface PassengerInfoSectionProps {
   onPassengerInfoChange: (info: PassengerInfo) => void;
 }
 
-const PassengerInfoSection: React.FC<PassengerInfoSectionProps> = ({
+const PassengerInfoSection = ({
   passengerInfo,
   onPassengerInfoChange
-}) => {
+}: PassengerInfoSectionProps) => {
   return (
     <div className="bg-white rounded-lg p-6 space-y-4">
       <h3 className="text-lg font-semibold text-gray-900">Passenger Information</h3>
@@ -39,12 +39,21 @@ const PassengerInfoSection: React.FC<PassengerInfoSectionProps> = ({
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
           <PhoneInput
-            country={'us'}
+            country="us"
             value={passengerInfo.phone}
             onChange={(phone) => onPassengerInfoChange({ ...passengerInfo, phone })}
-            containerClass="w-full"
-            inputClass="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
+            containerStyle={{ width: '100%' }}
+            inputStyle={{
+              width: '100%',
+              height: '42px',
+              fontSize: '16px',
+              paddingLeft: '48px'
+            }}
+            buttonStyle={{
+              backgroundColor: 'transparent',
+              borderRadius: '8px 0 0 8px',
+              borderRight: 'none'
+            }}
           />
         </div>
         <div>
@@ -61,3 +70,5 @@ const PassengerInfoSection: React.FC<PassengerInfoSectionProps> = ({
     </div>
   );
 };
+
+export default PassengerInfoSection;

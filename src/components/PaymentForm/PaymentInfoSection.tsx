@@ -8,10 +8,10 @@ interface PaymentInfoSectionProps {
   onPaymentDetailsChange: (details: PaymentDetails) => void;
 }
 
-const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
+const PaymentInfoSection = ({
   paymentDetails,
   onPaymentDetailsChange
-}) => {
+}: PaymentInfoSectionProps) => {
   const renderPaymentFields = () => {
     switch (paymentDetails.method) {
       case 'credit_card':
@@ -100,3 +100,5 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     </div>
   );
 };
+
+export default PaymentInfoSection;

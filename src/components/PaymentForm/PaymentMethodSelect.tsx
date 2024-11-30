@@ -7,10 +7,10 @@ interface PaymentMethodSelectProps {
   onChange: (method: PaymentMethod) => void;
 }
 
-const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
+const PaymentMethodSelect = ({
   value,
   onChange
-}) => {
+}: PaymentMethodSelectProps) => {
   const methods = [
     {
       id: 'credit_card' as const,
@@ -67,3 +67,5 @@ const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
     </div>
   );
 };
+
+export default PaymentMethodSelect;
